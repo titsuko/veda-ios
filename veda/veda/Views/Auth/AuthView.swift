@@ -74,7 +74,7 @@ struct AuthView: View {
                     
                     Text("Создать аккаунт")
                         .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(.gold)
+                        .foregroundStyle(.goldText)
                 }
             }
         }
