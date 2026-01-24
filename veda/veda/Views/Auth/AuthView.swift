@@ -59,29 +59,8 @@ struct AuthView: View {
     @ViewBuilder
     private var buttons: some View {
         VStack(spacing: 20) {
-            Button(action: { signInTapped = true }) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 30)
-                        .fill(.gold)
-                        .frame(height: 45)
-                    
-                    Text("Войти")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundStyle(.white)
-                }
-            }
-            
-            Button(action: { signUpTapped = true }) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 30)
-                        .stroke(.gold, lineWidth: 1)
-                        .frame(height: 45)
-                    
-                    Text("Создать аккаунт")
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(.goldText)
-                }
-            }
+            AppButtonFill(title: "Войти", action: { signInTapped = true })
+            AppButtonClear(title: "Создать аккаунт", action: { signUpTapped = true })
         }
         .padding(.horizontal, 50)
     }

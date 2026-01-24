@@ -63,7 +63,7 @@ struct SignUpView: View {
     @ViewBuilder
     private var userAgreement: some View {
         HStack(spacing: 15) {
-            Button(action: {isAgreed.toggle()}) {
+            Button(action: { isAgreed.toggle() }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 6)
                         .fill(.white)
@@ -85,19 +85,9 @@ struct SignUpView: View {
     
     @ViewBuilder
     private var button: some View {
-        Button(action: {}) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 30)
-                    .fill(.gold)
-                    .frame(height: 45)
-                
-                Text("Создать аккаунт")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(.white)
-            }
-        }
-        .padding(.horizontal, 40)
-        .padding(.top, 10)
+        AppButtonFill(title: "Войти", action: {})
+            .padding(.horizontal, 40)
+            .padding(.top, 10)
     }
 }
 

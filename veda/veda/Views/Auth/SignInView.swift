@@ -60,19 +60,9 @@ struct SignInView: View {
     
     @ViewBuilder
     private var button: some View {
-        Button(action: {}) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 30)
-                    .fill(.gold)
-                    .frame(height: 45)
-                
-                Text("Войти")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(.white)
-            }
-        }
-        .padding(.horizontal, 40)
-        .padding(.bottom, 10)
+        AppButtonFill(title: "Войти", action: {})
+            .padding(.horizontal, 40)
+            .padding(.bottom, 10)
     }
 }
 
