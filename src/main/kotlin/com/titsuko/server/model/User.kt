@@ -7,23 +7,32 @@ import java.time.Instant
 
 @Entity
 @Table(name = "users")
-data class User(
+open class User(
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    var id: Long = 0,
 
     @Column(unique = true, nullable = false)
-    val email: String,
+    var email: String = "",
 
     @Column(nullable = false)
-    val password: String,
+    var password: String = "",
 
-    @Column(name = "created_at", nullable = false)
     @CreationTimestamp
-    val createdAt: Instant,
+    @Column(name = "created_at", nullable = false, updatable = false)
+    var createdAt: Instant? = null,
 
-    @Column(name = "updated_at", nullable = false)
     @UpdateTimestamp
-    val updatedAt: Instant,
-)
+    @Column(name = "updated_at", nullable = false)
+    var updatedAt: Instant? = null,
+
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "profile_id", referencedColumnName = "profile_id")
+    var profile: Profile = Profile(),
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var refreshToken: MutableList<RefreshToken> = mutableListOf()
+) {
+    protected constructor(): this(0)
+}
