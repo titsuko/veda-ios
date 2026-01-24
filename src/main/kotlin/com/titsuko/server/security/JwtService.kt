@@ -14,43 +14,35 @@ class JwtService(
     @Value($$"${jwt.secret}") private val jwtSecret: String
 ) {
     private val secretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtSecret))
-
     private val accessExpiry = 15L * 60
 
-    fun generateTokenResponse(email: String): AuthResponse {
-        return AuthResponse(
-            accessToken = generateToken(email, "access", accessExpiry),
-            expiresIn = accessExpiry
-        )
-    }
-
-    fun validateToken(token: String, expectedType: String): Claims? {
-        val claims = parseAllClaims(token) ?: return null
-        val actualType = claims["type"] as? String
-
-        return if (actualType == expectedType) claims else null
-    }
-
-    private fun generateToken(email: String, type: String, expirySeconds: Long): String {
+    fun generateAccessToken(email: String): Pair<String, Long> {
         val now = System.currentTimeMillis()
         return Jwts.builder()
             .subject(email)
-            .claim("type", type)
             .issuedAt(Date(now))
-            .expiration(Date(now + expirySeconds * 1000))
+            .expiration(Date(now + accessExpiry * 1000))
             .signWith(secretKey)
-            .compact()
+            .compact() to accessExpiry
     }
 
-    private fun parseAllClaims(token: String): Claims? {
-        val rawToken = token.removePrefix("Bearer ").trim()
+    fun extractEmail(token: String): String? {
+        return getClaims(token)?.subject
+    }
+
+    fun isTokenValid(token: String): Boolean {
+        val claims = getClaims(token) ?: return false
+        return !claims.expiration.before(Date())
+    }
+
+    private fun getClaims(token: String): Claims? {
         return try {
             Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
-                .parseSignedClaims(rawToken)
+                .parseSignedClaims(token)
                 .payload
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             null
         }
     }
