@@ -13,22 +13,25 @@ struct SignInView: View {
     @State var isAgreed: Bool = false
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 0) {
             logo
-            VStack(spacing: 30) {
+            description
+            VStack(alignment: .trailing) {
                 textField
+                    .padding(.top, 40)
+                resetPasswordButton
+                    .padding(.top, 8)
                 Spacer()
                 button
             }
             .padding(.horizontal, 20)
         }
+        .padding(.top, 40)
+        .edgesIgnoringSafeArea(.top)
         .contentShape(Rectangle())
-        .gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    hideKeyboard()
-                }
-        )
+        .onTapGesture {
+            hideKeyboard()
+        }
     }
     
     @ViewBuilder
@@ -41,11 +44,34 @@ struct SignInView: View {
     }
     
     @ViewBuilder
+    private var description: some View {
+        VStack(spacing: 6) {
+            Text("Войти в аккаунт")
+                .font(.system(size: 26, weight: .bold))
+                .foregroundStyle(.goldText)
+            
+            Text("Пожалуйста, укажите email и пароль для входа")
+                .font(.system(size: 16))
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+        }
+    }
+    
+    @ViewBuilder
     private var textField: some View {
-        VStack(spacing: 30) {
+        VStack(spacing: 20) {
             AppTextField(field: "Email", secure: false, text: $email)
             AppTextField(field: "Пароль", secure: true, text: $password)
         }
+    }
+    
+    @ViewBuilder
+    private var resetPasswordButton: some View {
+        Button(action: {}) {
+            Text("Забыли пароль?")
+        }
+        .foregroundStyle(.goldText)
     }
     
     @ViewBuilder

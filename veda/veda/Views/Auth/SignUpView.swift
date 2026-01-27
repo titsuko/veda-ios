@@ -25,23 +25,24 @@ struct SignUpView: View {
     }
     
     var body: some View {
-        VStack(spacing: 40) {
+        VStack(spacing: 0) {
             logo
+            description
             VStack(spacing: 30) {
                 textField
+                    .padding(.top, 40)
                 userAgreement
                 Spacer()
                 button
             }
             .padding(.horizontal, 20)
         }
+        .padding(.top, 40)
+        .edgesIgnoringSafeArea(.top)
         .contentShape(Rectangle())
-        .gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    hideKeyboard()
-                }
-        )
+        .onTapGesture {
+            hideKeyboard()
+        }
     }
     
     @ViewBuilder
@@ -54,8 +55,24 @@ struct SignUpView: View {
     }
     
     @ViewBuilder
+    private var description: some View {
+        VStack(spacing: 6) {
+            Text("Создать аккаунт")
+                .font(.system(size: 26, weight: .bold))
+                .foregroundStyle(.goldText)
+            
+            Text("Пожалуйста, укажите имя, email и пароль для входа")
+                .font(.system(size: 16))
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+        }
+    }
+    
+    
+    @ViewBuilder
     private var textField: some View {
-        VStack(spacing: 30) {
+        VStack(spacing: 20) {
             AppTextField(field: "Ваше имя", secure: false, text: $name)
             AppTextField(field: "Email", secure: false, text: $email)
             AppTextField(field: "Пароль", secure: true, text: $password)
@@ -68,7 +85,7 @@ struct SignUpView: View {
             HStack(alignment: .center) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 16)
-                        .fill(isAgreed ? .gold : .clear)
+                        .fill(isAgreed ? .goldText : .clear)
                         .stroke(.gold, lineWidth: 1)
                         .frame(width: 22, height: 22)
                     
