@@ -1,9 +1,11 @@
+rootProject.name = "veda-server"
+
 include(
     ":app",
     ":common",
-    ":feature:identity",
-    ":feature:cards",
-    ":feature:health"
+    ":feature:health",
+    ":feature:identity:identity-api",
+    ":feature:identity:identity-domain",
+    ":feature:cards:cards-api",
+    ":feature:cards:cards-domain"
 )
-
-rootProject.name = "veda-server"

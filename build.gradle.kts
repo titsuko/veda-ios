@@ -13,9 +13,3 @@ allprojects {
         mavenCentral()
     }
 }
-dependencies {
-    implementation(kotlin("stdlib"))
-}
-repositories {
-    mavenCentral()
-}

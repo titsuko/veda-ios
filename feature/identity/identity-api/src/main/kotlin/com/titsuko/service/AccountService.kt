@@ -1,0 +1,94 @@
+package com.titsuko.service
+
+import com.titsuko.dto.request.CheckEmailRequest
+import com.titsuko.dto.request.RegisterRequest
+import com.titsuko.dto.response.AccountResponse
+import com.titsuko.dto.response.AuthResponse
+import com.titsuko.dto.response.AvailabilityResponse
+import com.titsuko.exception.InvalidTokenException
+import com.titsuko.exception.UserAlreadyExistsException
+import com.titsuko.exception.UserNotFoundException
+import com.titsuko.model.Profile
+import com.titsuko.model.User
+import com.titsuko.repository.ProfileRepository
+import com.titsuko.repository.UserRepository
+import com.titsuko.security.HashEncoder
+import com.titsuko.security.JwtService
+import com.titsuko.security.RefreshService
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+@Service
+class AccountService(
+    private val userRepository: UserRepository,
+    private val profileRepository: ProfileRepository,
+    private val jwtService: JwtService,
+    private val refreshService: RefreshService,
+    private val hashEncoder: HashEncoder
+) {
+
+    @Transactional
+    fun register(request: RegisterRequest): AuthResponse {
+        if (userRepository.findByEmail(requireNotNull(request.email)) != null) {
+            throw UserAlreadyExistsException()
+        }
+
+        val hashedPassword = hashEncoder.encode(requireNotNull(request.password)).toString()
+        val (firstName, lastName) = parseFullName(requireNotNull(request.fullName))
+
+        val profile = profileRepository.save(
+            Profile(
+                firstName = firstName,
+                lastName = lastName
+            )
+        )
+
+        val user = userRepository.save(
+            User(
+                email = requireNotNull(request.email),
+                password = hashedPassword,
+                profile = profile
+            )
+        )
+
+        val accessToken = jwtService.generateAccessToken(user.email)
+        val refreshToken = refreshService.createToken(user)
+
+        return AuthResponse(
+            accessToken = accessToken.first,
+            refreshToken = refreshToken,
+            expiresIn = accessToken.second
+        )
+    }
+
+    private fun parseFullName(fullName: String): Pair<String, String> {
+        val parts = fullName.trim().split("\\s+".toRegex(), 2)
+        return parts[0] to (parts.getOrNull(1) ?: "")
+    }
+
+    @Transactional(readOnly = true)
+    fun getProfile(): AccountResponse {
+        val authentication = SecurityContextHolder.getContext().authentication
+        val email = authentication?.name
+            ?: throw InvalidTokenException("Session expired or invalid")
+
+        val user = userRepository.findByEmail(email)
+            ?: throw UserNotFoundException(email)
+
+        return AccountResponse(
+            firstName = user.profile.firstName,
+            lastName = user.profile.lastName,
+            createdAt = user.createdAt
+        )
+    }
+
+    @Transactional(readOnly = true)
+    fun checkEmail(request: CheckEmailRequest): AvailabilityResponse {
+        val exists = userRepository.findByEmail(requireNotNull(request.email)) != null
+        return AvailabilityResponse(
+            available = !exists,
+            message = if (exists) "Email already exists" else "Email is available"
+        )
+    }
+}

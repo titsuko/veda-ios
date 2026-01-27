@@ -1,22 +1,10 @@
 plugins {
-    kotlin("jvm") version "2.3.0"
-}
-
-group = "com.titsuko"
-version = "0.0.1-SNAPSHOT"
-
-repositories {
-    mavenCentral()
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
+    kotlin("jvm")
+    kotlin("plugin.spring")
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
-}
-
-kotlin {
-    jvmToolchain(21)
-}
-
-tasks.test {
-    useJUnitPlatform()
+    implementation("org.springframework.boot:spring-boot-starter-web")
 }

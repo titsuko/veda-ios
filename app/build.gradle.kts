@@ -7,5 +7,13 @@ plugins {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation(kotlin("stdlib"))
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    // include database driver
+    runtimeOnly("com.mysql:mysql-connector-j")
+
+    // include modules:
+    implementation(project(":common"))
+    implementation(project(":feature:health"))
+    implementation(project(":feature:cards:cards-api"))
+    implementation(project(":feature:identity:identity-api"))
 }
