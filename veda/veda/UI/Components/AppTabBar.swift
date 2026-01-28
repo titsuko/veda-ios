@@ -11,26 +11,6 @@ struct AppTabBar: View {
     @Binding var selectedTab: SelectedTab 
     
     var body: some View {
-        tabBar()
-    }
-    
-    @ViewBuilder
-    private func tabButton(icon: String, title: String, tab: SelectedTab) -> some View {
-        let isSelected = selectedTab == tab
-        Button(action: { selectedTab = tab }) {
-            VStack(spacing: 8) {
-                Image(systemName: icon)
-                    .font(.system(size: 22))
-                Text(title)
-                    .font(.system(size: 12))
-            }
-            .frame(maxWidth: .infinity)
-            .foregroundStyle(isSelected ? Color.goldText : .secondary)
-        }
-    }
-    
-    @ViewBuilder
-    private func tabBar() -> some View {
         VStack(spacing: 0) {
             Divider()
             
@@ -48,6 +28,21 @@ struct AppTabBar: View {
                 .padding(.horizontal, 10)
                 .padding(.bottom, 20)
             }
+        }
+    }
+    
+    @ViewBuilder
+    private func tabButton(icon: String, title: String, tab: SelectedTab) -> some View {
+        let isSelected = selectedTab == tab
+        Button(action: { selectedTab = tab }) {
+            VStack(spacing: 8) {
+                Image(systemName: icon)
+                    .font(.system(size: 22))
+                Text(title)
+                    .font(.system(size: 12))
+            }
+            .frame(maxWidth: .infinity)
+            .foregroundStyle(isSelected ? Color.goldText : .secondary)
         }
     }
 }
