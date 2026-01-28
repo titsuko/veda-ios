@@ -14,7 +14,7 @@ struct SignUpView: View {
     @State var isAgreed: Bool = false
     
     private var agreementText: AttributedString {
-        var part1 = AttributedString("Регистрируясь, вы подтверждаете, что ознакомились и соглашаетесь с условиями ")
+        var part1 = AttributedString("Вы подтверждаете, что ознакомились и соглашаетесь с условиями ")
         part1.foregroundColor = .secondary
         
         var part2 = AttributedString("пользовательского соглашения.")
@@ -25,33 +25,17 @@ struct SignUpView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            logo
+        VStack {
             description
-            VStack(spacing: 30) {
-                textField
-                    .padding(.top, 40)
-                userAgreement
-            }
+            textField.padding(.top, 30)
+            userAgreement.padding(.top, 20)
             Spacer()
             button
         }
         .padding(.horizontal, 20)
-        .padding(.top, 40)
-        .edgesIgnoringSafeArea(.top)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .contentShape(Rectangle())
-        .onTapGesture {
-            hideKeyboard()
-        }
-    }
-    
-    @ViewBuilder
-    private var logo: some View {
-        ZStack {
-            Image("logo")
-                .resizable()
-                .frame(width: 230, height: 230)
-        }
+        .onTapGesture { hideKeyboard() }
     }
     
     @ViewBuilder

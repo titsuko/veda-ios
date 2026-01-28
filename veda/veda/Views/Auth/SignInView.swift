@@ -13,33 +13,18 @@ struct SignInView: View {
     @State var isAgreed: Bool = false
     
     var body: some View {
-        VStack(spacing: 0) {
-            logo
+        VStack {
             description
-            VStack(alignment: .trailing) {
-                textField
-                    .padding(.top, 40)
-                resetPasswordButton
-                    .padding(.top, 8)
-            }
+            textField.padding(.top, 40)
+            resetPasswordButton.padding(.top, 8)
             Spacer()
             button
         }
         .padding(.horizontal, 20)
-        .padding(.top, 40)
-        .edgesIgnoringSafeArea(.top)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
         .contentShape(Rectangle())
         .onTapGesture {
             hideKeyboard()
-        }
-    }
-    
-    @ViewBuilder
-    private var logo: some View {
-        ZStack {
-            Image("logo")
-                .resizable()
-                .frame(width: 230, height: 230)
         }
     }
     
@@ -68,8 +53,11 @@ struct SignInView: View {
     
     @ViewBuilder
     private var resetPasswordButton: some View {
-        Button(action: {}) {
-            Text("Забыли пароль?")
+        HStack {
+            Spacer()
+            Button(action: {}) {
+                Text("Забыли пароль?")
+            }
         }
         .foregroundStyle(.goldText)
     }
