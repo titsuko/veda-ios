@@ -26,6 +26,7 @@ class SecurityConfig {
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { auth ->
                 auth
+                    .requestMatchers("/admin/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/accounts").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/accounts/check-email").permitAll()

@@ -13,6 +13,7 @@ dependencies {
 
     // include modules:
     implementation(project(":common"))
+    implementation(project(":feature:admin"))
     implementation(project(":feature:health"))
     implementation(project(":feature:cards:cards-api"))
     implementation(project(":feature:identity:identity-api"))
