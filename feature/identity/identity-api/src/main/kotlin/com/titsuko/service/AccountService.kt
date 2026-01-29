@@ -79,6 +79,7 @@ class AccountService(
         return AccountResponse(
             firstName = user.profile.firstName,
             lastName = user.profile.lastName,
+            role = user.role.toString(),
             createdAt = user.createdAt
         )
     }

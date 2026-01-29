@@ -1,5 +1,6 @@
 package com.titsuko.model
 
+import com.titsuko.model.`object`.Role
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -30,6 +31,10 @@ open class User(
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "profile_id", referencedColumnName = "profile_id")
     var profile: Profile = Profile(),
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    var role: Role = Role.USER,
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     var refreshToken: MutableList<RefreshToken> = mutableListOf()
