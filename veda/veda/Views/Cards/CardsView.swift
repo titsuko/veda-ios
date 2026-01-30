@@ -45,8 +45,9 @@ struct CardsView: View {
                 .frame(width: 60, height: 60)
             
             Image(systemName: image)
-                .font(.system(size: 20))
+                .font(.system(size: 22))
                 .foregroundStyle(.white)
+                .bold()
         }
     }
     

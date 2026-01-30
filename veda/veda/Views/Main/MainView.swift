@@ -12,61 +12,18 @@ struct MainView: View {
     @State private var searchFocused = false
     @State private var showSearchBar: Bool = false
     @State private var selectedCategory: CardCategory?
+    
+    let categories = CardCategory.mockCategories
         
     var headerHeight: CGFloat = 130
-    
-    let categories: [CardCategory] = [
-        CardCategory(
-            title: "Праздники",
-            description: "Традиционные торжества и их смысл",
-            quantity: 4,
-            color: .orange,
-            image: "sun.min",
-            items: [
-                CardItem(title: "Коляда", description: "Зимний праздник"),
-                CardItem(title: "Купала", description: "Летний обряд")
-            ]
-        ),
-        CardCategory(
-            title: "Символы",
-            description: "Знаки и их значения",
-            quantity: 3,
-            color: .green,
-            image: "wand.and.sparkles",
-            items: [
-                CardItem(title: "Солнце", description: "Источник жизни"),
-                CardItem(title: "Древо", description: "Связь миров")
-            ]
-        ),
-        CardCategory(
-            title: "Обряды",
-            description: "Ритуалы и священные практики",
-            quantity: 2,
-            color: .red,
-            image: "flame",
-            items: [
-                CardItem(title: "Солнце", description: "Источник жизни"),
-                CardItem(title: "Древо", description: "Связь миров")
-            ]
-        ),
-        CardCategory(
-            title: "Персонажи",
-            description: "Мифологические образы и герои",
-            quantity: 3,
-            color: .purple,
-            image: "person",
-            items: [
-                CardItem(title: "Солнце", description: "Источник жизни"),
-                CardItem(title: "Древо", description: "Связь миров")
-            ]
-        )
-    ]
+    var tabBarHeight: CGFloat = 85
     
     var body: some View {
         NavigationStack {
             ScrollView(showsIndicators: false) {
                 cardsView
                     .padding(.top, headerHeight)
+                    .padding(.bottom, tabBarHeight)
             }
             .overlay(alignment: .top) { header }
             .ignoresSafeArea()
@@ -86,7 +43,7 @@ struct MainView: View {
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
                 Rectangle()
-                    .fill(.header.opacity(0.4))
+                    .fill(.header.opacity(0.6))
                     .background(TransparentBlur())
                     .frame(height: headerHeight)
                 
@@ -110,8 +67,8 @@ struct MainView: View {
     private var normalHeader: some View {
         HStack {
             HStack {
-                Image(systemName: "house.fill")
-                Text("Главная")
+                Image(systemName: "books.vertical")
+                Text("Разделы")
                     .bold()
             }
             .font(.system(size: 22))
@@ -159,6 +116,8 @@ struct MainView: View {
                             image: category.image
                         )
                     }
+                    .buttonStyle(CardPressStyle())
+                    
                     Divider()
                 }
                 .foregroundStyle(.primary)
