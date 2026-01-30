@@ -19,10 +19,11 @@ struct CardsView: View {
     var body: some View {
         background
             .overlay(
-                VStack {
+                HStack(spacing: 15) {
                     imageCard
-                    Spacer()
+                        .padding(.leading)
                     text
+                    Spacer()
                     quantityCard
                 }
             )
@@ -30,10 +31,9 @@ struct CardsView: View {
     
     @ViewBuilder
     private var background: some View {
-        RoundedRectangle(cornerRadius: 20)
-            .fill(colorScheme == .dark ? color.gradient.opacity(0.05) : color.gradient.opacity(0.20))
-            .stroke(color.gradient, lineWidth: 1)
-            .frame(height: 200)
+        RoundedRectangle(cornerRadius: 0)
+            .fill(.clear)
+            .frame(height: 80)
     }
     
     @ViewBuilder
@@ -42,31 +42,27 @@ struct CardsView: View {
             RoundedRectangle(cornerRadius: 8)
                 .fill(colorScheme == .dark ? color.gradient.opacity(0.15) : color.gradient.opacity(0.35))
                 .stroke(color, lineWidth: 0.3)
-                .frame(width: 38, height: 38)
+                .frame(width: 48, height: 48)
             
             Image(systemName: image)
                 .foregroundStyle(color)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .padding(15)
     }
     
     @ViewBuilder
     private var text: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 3) {
             Text(title)
-                .font(.system(size: 12, weight: .semibold))
+                .font(.system(size: 16, weight: .semibold))
                 .multilineTextAlignment(.leading)
                 .lineLimit(2)
             
             Text(description)
-                .font(.system(size: 11, weight: .semibold))
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.leading)
-                .lineLimit(3)
+                .lineLimit(2)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .padding(.leading, 15)
     }
     
     @ViewBuilder
@@ -75,16 +71,15 @@ struct CardsView: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 30)
                     .fill(colorScheme == .dark ? color.gradient.opacity(0.1) : color.gradient.opacity(0.3))
-                    .frame(width: 110, height: 30)
+                    .frame(width: 100, height: 30)
+                    .glassEffect()
                 
                 Text("\(quantity) карточек")
                     .font(.system(size: 13, weight: .bold))
                     .foregroundStyle(color.gradient)
             }
-            Spacer()
         }
-        .padding(.bottom, 10)
-        .padding(.leading, 10)
+        .padding(.trailing)
     }
 }
 

@@ -46,7 +46,7 @@ struct AppTextField: View {
                 .padding(.horizontal, 3)
                 .bold(isTextFieldFocused)
                 .foregroundStyle(.secondary)
-                .background(.midnightBlue)
+                .background(.sheetBackground)
                 .offset(y: (isTextFieldFocused || !text.isEmpty) ? -26 : 0)
             
             Spacer()

@@ -24,7 +24,7 @@ struct SignInView: View {
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .contentShape(Rectangle())
         .onTapGesture { hideKeyboard() }
-        .background(.midnightBlue)
+        .background(.sheetBackground)
     }
     
     @ViewBuilder

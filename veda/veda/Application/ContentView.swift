@@ -8,28 +8,33 @@
 import SwiftUI
 
 enum SelectedTab: Hashable {
-    case main, collection, settings
+    case main 
+    case collection
+    case settings
 }
 
 struct ContentView: View {
     @State private var selectedTab: SelectedTab = .main
-    
+    @State private var previousTab: SelectedTab = .main
+
     var body: some View {
-        content
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .safeAreaInset(edge: .bottom) { AppTabBar(selectedTab: $selectedTab) }
-            .ignoresSafeArea()
-    }
-    
-    @ViewBuilder
-    private var content: some View {
-        switch selectedTab {
-        case .main:
-            MainView()
-        case .collection:
-            CollectionsView()
-        case .settings:
-            SettingsView()
+        ZStack {
+            if selectedTab == .main {
+                MainView()
+            }
+            if selectedTab == .collection {
+                CollectionsView()
+            }
+            if selectedTab == .settings {
+                SettingsView()
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .safeAreaInset(edge: .bottom) { AppTabBar(selectedTab: $selectedTab) }
+        .ignoresSafeArea()
+        .background(.mainBackground)
+        .onChange(of: selectedTab) { oldValue, newValue in
+            previousTab = oldValue
         }
     }
 }

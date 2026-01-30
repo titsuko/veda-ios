@@ -11,14 +11,9 @@ struct AppSearchBar: View {
     let title: String
     let height: CGFloat
     
-    @FocusState private var isFocused: Bool
+    @Binding var isFocused: Bool
+    @FocusState private var internalFocus: Bool
     @Binding var searchText: String
-    
-    init(title: String, height: CGFloat = 40, searchText: Binding<String>) {
-        self.title = title
-        self.height = height
-        self._searchText = searchText
-    }
     
     var body: some View {
         ZStack {
@@ -28,15 +23,21 @@ struct AppSearchBar: View {
                 textField
             }
         }
+        .onAppear {
+            internalFocus = true
+        }
+        .onChange(of: isFocused) { _, newValue in
+            internalFocus = newValue
+        }
         .animation(.spring(duration: 0.2), value: searchText)
-        .animation(.spring(duration: 0.2), value: isFocused)
     }
     
     @ViewBuilder
     private var background: some View {
         RoundedRectangle(cornerRadius: 30)
-            .fill(.gray.opacity(0.2))
+            .fill(.gray.opacity(0))
             .frame(height: height)
+            .glassEffect()
     }
     
     @ViewBuilder
@@ -59,7 +60,10 @@ struct AppSearchBar: View {
     private var textField: some View {
         HStack {
             TextField("", text: $searchText)
-                .focused($isFocused)
+                .focused($internalFocus)
+                .onChange(of: isFocused) { _, newValue in
+                    internalFocus = newValue
+                }
                 .padding(.leading, 40)
             
             if !searchText.isEmpty {
@@ -68,7 +72,7 @@ struct AppSearchBar: View {
                         .font(.system(size: 18))
                 }
                 .foregroundStyle(.secondary)
-                .padding(.trailing)
+                .padding(.trailing, 10)
             }
         }
     }

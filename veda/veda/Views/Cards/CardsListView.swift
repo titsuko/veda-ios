@@ -21,7 +21,7 @@ struct CardsListView: View {
             .padding(.horizontal)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.midnightBlue)
+    
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button("Закрыть") {

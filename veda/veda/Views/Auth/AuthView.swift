@@ -21,7 +21,7 @@ struct AuthView: View {
             }
             .navigationDestination(isPresented: $signInTapped) { SignInView() }
             .navigationDestination(isPresented: $signUpTapped) { SignUpView() }
-            .background(.midnightBlue)
+            .background(.sheetBackground)
         }
     }
     
@@ -42,12 +42,12 @@ struct AuthView: View {
             
             Text("СОБИРАЙ ЗНАНИЯ")
                 .font(.custom("CrimsonText-Regular", size: 24))
-                .foregroundStyle(.grayText)
+                .foregroundStyle(.gray)
             
             Text("Энциклопедия знаний  в  формате коллекционных карточек")
                 .font(.custom("CrimsonText-Regular", size: 16))
                 .multilineTextAlignment(.center)
-                .foregroundStyle(.grayText)
+                .foregroundStyle(.gray)
         }
     }
     

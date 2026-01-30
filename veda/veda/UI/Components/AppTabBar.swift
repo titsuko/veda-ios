@@ -16,7 +16,7 @@ struct AppTabBar: View {
             
             ZStack {
                 Rectangle()
-                    .fill(.midnightBlue.opacity(0.5))
+                    .fill(.tabBar.opacity(0.4))
                     .background(TransparentBlur())
                     .frame(maxWidth: .infinity, maxHeight: 85)
                 

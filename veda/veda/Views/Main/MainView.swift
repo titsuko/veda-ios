@@ -9,12 +9,11 @@ import SwiftUI
 
 struct MainView: View {
     @State private var searchText: String = ""
+    @State private var searchFocused = false
+    @State private var showSearchBar: Bool = false
     @State private var selectedCategory: CardCategory?
-    
-    private let columns = [
-        GridItem(.flexible(), spacing: 10),
-        GridItem(.flexible(), spacing: 10)
-    ]
+        
+    var headerHeight: CGFloat = 130
     
     let categories: [CardCategory] = [
         CardCategory(
@@ -65,15 +64,15 @@ struct MainView: View {
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                ScrollView(showsIndicators: true) {
-                    cardsView
-                }
-                .safeAreaInset(edge: .top) {header}
-                .edgesIgnoringSafeArea(.top)
+            ScrollView(showsIndicators: false) {
+                cardsView
+                    .padding(.top, headerHeight)
             }
-            .background(.nightBlue)
+            .overlay(alignment: .top) { header }
+            .ignoresSafeArea()
+            .background(.mainBackground)
         }
+        .animation(.spring(duration: 0.35), value: showSearchBar)
         .onTapGesture { hideKeyboard() }
         .sheet(item: $selectedCategory) { category in
             NavigationStack {
@@ -87,36 +86,84 @@ struct MainView: View {
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
                 Rectangle()
-                    .fill(.midnightBlue.opacity(0.5))
+                    .fill(.header.opacity(0.4))
                     .background(TransparentBlur())
-                    .frame(height: 120)
+                    .frame(height: headerHeight)
                 
-                AppSearchBar(title: "Поиск карточек", searchText: $searchText)
-                    .padding(.horizontal, 10)
-                    .padding(.bottom, 10)
+                ZStack {
+                    if showSearchBar {
+                        searchHeader
+                            .transition(.blurAndFade)
+                    } else {
+                        normalHeader
+                            .transition(.blurAndFade)
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 10)
             }
             Divider()
         }
     }
     
     @ViewBuilder
+    private var normalHeader: some View {
+        HStack {
+            HStack {
+                Image(systemName: "house.fill")
+                Text("Главная")
+                    .bold()
+            }
+            .font(.system(size: 22))
+            .padding(.top, 10)
+            
+            Spacer()
+            AppButtonClear(title: "", image: "square.grid.2x2", width: 25, height: 35, action: {
+                
+            })
+            AppButtonClear(title: "", image: "magnifyingglass", width: 25, height: 35, action: {
+                showSearchBar = true
+                searchFocused = true
+            })
+        }
+    }
+    
+    @ViewBuilder
+    private var searchHeader: some View {
+        HStack(spacing: 0) {
+            AppSearchBar(title: "Поиск карточек", height: 45, isFocused: $searchFocused, searchText: $searchText)
+            Spacer()
+            AppButtonClear(title: "", image: "xmark", width: 25, height: 35, action: {
+                showSearchBar = false
+                searchFocused = false
+                searchText = ""
+            })
+        }
+    }
+    
+    @ViewBuilder
     private var cardsView: some View {
-        LazyVGrid(columns: columns, spacing: 10) {
-            ForEach(categories) { category in
-                Button(action: {selectedCategory = category}) {
-                    CardsView(
-                        title: category.title,
-                        description: category.description,
-                        quantity: category.quantity,
-                        color: category.color,
-                        image: category.image
-                    )
+        VStack(spacing: 0) {
+            ForEach(categories.indices, id: \.self) { index in
+                let category = categories[index]
+                VStack(spacing: 0) {
+                    if index == 0 { Divider() }
+                    Button(action: {
+                        selectedCategory = category
+                    }) {
+                        CardsView(
+                            title: category.title,
+                            description: category.description,
+                            quantity: category.quantity,
+                            color: category.color,
+                            image: category.image
+                        )
+                    }
+                    Divider()
                 }
                 .foregroundStyle(.primary)
             }
         }
-        .padding(.horizontal, 10)
-        .padding(.top, 5)
     }
 }
 
