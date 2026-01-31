@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  db:
+    ports:
+      - "3306:3306"
+
+  app:
+    container_name: veda-server-dev
+    build:
+      context: .
+      target: production
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
