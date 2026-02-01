@@ -13,6 +13,13 @@ struct SignUpView: View {
     @State var password: String = ""
     @State var isAgreed: Bool = false
     
+    @State var isLoading: Bool = false
+    @State var showError: Bool = false
+    @State var errorMessage: String = ""
+    @State var isRegistered: Bool = false
+    
+    private let accountService: AccountServiceProtocol
+    
     private var agreementText: AttributedString {
         var part1 = AttributedString("Вы подтверждаете, что ознакомились и соглашаетесь с условиями ")
         part1.foregroundColor = .secondary
@@ -22,6 +29,10 @@ struct SignUpView: View {
         part2.underlineStyle = .single
         
         return part1 + part2
+    }
+    
+    init(accountService: AccountServiceProtocol = AccountService()) {
+        self.accountService = accountService
     }
     
     var body: some View {
@@ -93,8 +104,29 @@ struct SignUpView: View {
     @ViewBuilder
     private var button: some View {
         AppButton(title: "Создать аккаунт", height: 40, style: .fill) {
+            guard !name.isEmpty, !email.isEmpty, !password.isEmpty, isAgreed else {
+                return
+            }
+            
+            isLoading = true
+            
+            Task {
+                do {
+                    let model = AuthRequest.Register(fullName: name, email: email, password: password)
+                    
+                    let _ = try await accountService.register(data: model)
+                    isRegistered = true
+                } catch {
+                    errorMessage = error.localizedDescription
+                    showError = true
+                }
+                
+                isLoading = false
+            }
             
         }
+        .disabled(isLoading)
+        .opacity(isLoading ? 0.6 : 1)
     }
 }
 
