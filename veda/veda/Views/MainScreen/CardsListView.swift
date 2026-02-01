@@ -20,16 +20,14 @@ struct CardsListView: View {
     var headerHeight: CGFloat = 130
     
     var body: some View {
-        NavigationStack {
-            ScrollView(showsIndicators: false) {
-                cardsListView
-                    .padding(.top, headerHeight)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .overlay(alignment: .top) { header }
-            .ignoresSafeArea()
-            .background(.mainBackground)
+        ScrollView(showsIndicators: false) {
+            cardsListView
+                .padding(.top, headerHeight)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .top) { header }
+        .ignoresSafeArea()
+        .background(.mainBackground)
         .navigationBarHidden(true)
         .animation(.spring(duration: 0.35), value: showSearchBar)
         .onTapGesture { hideKeyboard() }
@@ -81,9 +79,9 @@ struct CardsListView: View {
                         .padding(.vertical, 3)
                         .overlay(
                             Capsule()
-                                .fill(colorScheme == .dark ? category.color.gradient.opacity(0.1) : category.color.gradient.opacity(0.3))
+                                .fill(colorScheme == .dark ? category.color.gradient.opacity(0.1) : category.color.gradient.opacity(0.2))
+                                .stroke(category.color.opacity(0.4), lineWidth: 1)
                         )
-                        .glassEffect()
                 }
                 Spacer()
                 AppButton(systemImage: "magnifyingglass", width: 25, height: 35, style: .clear) {
@@ -109,52 +107,40 @@ struct CardsListView: View {
     
     @ViewBuilder
     private var cardsListView: some View {
-        VStack(spacing: 0) {
-            ForEach(Array(category.items.enumerated()), id: \.offset) { index, item in
-                VStack(spacing: 0) {
-                    if index == 0 { Divider() }
-                    NavigationLink(destination: CardReview()) {
-                        cardsView(item: item)
-                    }
-                    .buttonStyle(ButtonPressStyle())
-                    
-                    Divider()
-                }
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(stops: [
-                            .init(color: item.rarity.color.opacity(0.22), location: 0.0),
-                            .init(color: item.rarity.color.opacity(0.10), location: 0.45),
-                            .init(color: item.rarity.color.opacity(0.04), location: 0.75),
-                            .init(color: .clear, location: 1.0),
-                        ]),
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-            }
+        NavigationList(items: category.items) { item in
+            CardsView(category: category, item: item)
+        } destination: { item in
+            CardReview(category: category, item: item)
+        } background: { item in
+            LinearGradient(
+                gradient: Gradient(stops: [
+                    .init(color: colorScheme == .dark ? item.rarity.color.opacity(0.20) : item.rarity.color.opacity(0.30), location: 0.0),
+                    .init(color: colorScheme == .dark ? item.rarity.color.opacity(0.10) : item.rarity.color.opacity(0.20), location: 0.45),
+                    .init(color: colorScheme == .dark ? item.rarity.color.opacity(0.05) : item.rarity.color.opacity(0.05), location: 0.75),
+                    .init(color: colorScheme == .dark ? item.rarity.color.opacity(0.00) : item.rarity.color.opacity(0.00), location: 1.0)
+                ]),
+                startPoint: .trailing,
+                endPoint: .leading
+            )
         }
     }
+}
+
+private struct CardsView: View {
+    @Environment(\.colorScheme) private var colorScheme
     
-    @ViewBuilder
-    private func cardsView(item: CardItem) -> some View {
+    let category: CardCategory
+    let item: CardItem
+    
+    var body: some View {
         HStack(alignment: .center, spacing: 10) {
             ZStack {
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                item.rarity.color.opacity(0.85),
-                                item.rarity.color.opacity(0.45)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 65, height: 75)
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(item.rarity.color.gradient)
+                    .frame(width: 65, height: 65)
                 
                 Image(systemName: category.image)
-                    .font(.system(size: 16))
+                    .font(.system(size: 22))
                     .foregroundStyle(.white)
                     .bold()
             }
@@ -179,20 +165,19 @@ struct CardsListView: View {
             Spacer()
             
             Text(item.rarity.name)
-                .font(.system(size: 14))
+                .font(.system(size: 14, weight: .bold))
                 .foregroundStyle(item.rarity.color.gradient)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
                 .overlay(
                     Capsule()
                         .fill(item.rarity.color.opacity(0.2))
-                        .stroke(item.rarity.color.opacity(0.6), lineWidth: 1)
+                        .stroke(item.rarity.color.opacity(0.4), lineWidth: 1)
                 )
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.vertical, 10)
         .padding(.horizontal, 10)
-        
     }
 }
 

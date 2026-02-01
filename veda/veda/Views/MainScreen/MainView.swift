@@ -96,26 +96,70 @@ struct MainView: View {
     
     @ViewBuilder
     private var sectionsView: some View {
-        VStack(spacing: 0) {
-            ForEach(categories.indices, id: \.self) { index in
-                let category = categories[index]
-                VStack(spacing: 0) {
-                    if index == 0 { Divider() }
-                    NavigationLink(destination: CardsListView(category: category)) {
-                        SectionsView(
-                            title: category.title,
-                            description: category.description,
-                            quantity: category.quantity,
-                            color: category.color,
-                            image: category.image
-                        )
-                    }
-                    .buttonStyle(ButtonPressStyle())
-                    
-                    Divider()
-                }
-            }
+        NavigationList(items: categories) { category in
+            SectionsView(
+                title: category.title,
+                description: category.description,
+                quantity: category.quantity,
+                color: category.color,
+                image: category.image
+            )
+        } destination: { category in
+            CardsListView(category: category)
         }
+    }
+}
+
+private struct SectionsView: View {
+    @Environment(\.colorScheme) private var colorScheme: ColorScheme
+    
+    let title: String
+    let description: String
+    let quantity: Int
+    let color: Color
+    let image: String
+    
+    var body: some View {
+        HStack(spacing: 15) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(color.gradient)
+                    .frame(width: 60, height: 60)
+                
+                Image(systemName: image)
+                    .font(.system(size: 22))
+                    .foregroundStyle(.white)
+                    .bold()
+            }
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.system(size: 16, weight: .semibold))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+                
+                Text(description)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+            }
+            Spacer()
+            
+            Text("\(quantity) карточек")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundStyle(color.gradient)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(
+                    Capsule()
+                        .fill(colorScheme == .dark ? color.gradient.opacity(0.1) : color.gradient.opacity(0.2))
+                )
+                .overlay(
+                    Capsule()
+                        .stroke(color.opacity(0.4), lineWidth: 1)
+                )
+        }
+        .padding(10)
     }
 }
 
