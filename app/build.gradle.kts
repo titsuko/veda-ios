@@ -18,3 +18,12 @@ dependencies {
     implementation(project(":feature:cards:cards-api"))
     implementation(project(":feature:identity:identity-api"))
 }
+
+tasks.bootJar {
+    enabled = true
+    archiveFileName.set("app.jar")
+}
+
+tasks.jar {
+    enabled = false
+}

@@ -1,0 +1,10 @@
+.git
+.gradle
+.idea
+.kotlin
+build/
+out/
+logs/
+.DS_Store
+**/*.test
+**/*.spec

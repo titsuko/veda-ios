@@ -13,3 +13,17 @@ allprojects {
         mavenCentral()
     }
 }
+
+subprojects {
+    tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+        enabled = false
+    }
+}
+
+tasks.bootJar {
+    enabled = true
+}
+
+tasks.jar {
+    enabled = false
+}
