@@ -33,7 +33,7 @@ class SecurityConfig(
                 auth.requestMatchers(
                     "/css/**", "/js/**", "/images/**", "/assets/**",
                     "/admin/login", "/api/accounts", "/api/accounts/check-email",
-                    "/api/sessions", "/api/sessions/refresh"
+                    "/api/sessions", "/api/sessions/refresh", "/api/health"
                 ).permitAll()
                 auth.anyRequest().authenticated()
             }
