@@ -12,7 +12,7 @@ struct NetworkConfig {
     let headers: [String: String]
     
     static let dev = NetworkConfig(
-        baseURL: URL(string: "http://localhost:8080/api")!,
+        baseURL: URL(string: "http://project.veda.webtm.ru/api")!,
         headers: ["Content-Type": "application/json"]
     )
 }
