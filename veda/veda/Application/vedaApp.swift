@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct vedaApp: App {
+    @StateObject private var authViewModel = SignUpViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if authViewModel.isRegistered {
+                ContentView()
+            } else {
+                AuthView()
+            }
         }
     }
 }

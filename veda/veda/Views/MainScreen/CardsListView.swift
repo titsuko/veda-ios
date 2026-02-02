@@ -17,15 +17,17 @@ struct CardsListView: View {
     
     let category: CardCategory
     
+    var headerHeight: CGFloat = 130
+    
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                
-            }
-            .overlay(alignment: .top) { header }
-            .ignoresSafeArea()
-            .background(.mainBackground)
+        ScrollView(showsIndicators: false) {
+            cardsListView
+                .padding(.top, headerHeight)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .top) { header }
+        .ignoresSafeArea()
+        .background(.mainBackground)
         .navigationBarHidden(true)
         .animation(.spring(duration: 0.35), value: showSearchBar)
         .onTapGesture { hideKeyboard() }
@@ -38,7 +40,7 @@ struct CardsListView: View {
                 Rectangle()
                     .fill(.header.opacity(0.6))
                     .background(TransparentBlur())
-                    .frame(height: 130)
+                    .frame(height: headerHeight)
                 
                 ZStack {
                     if showSearchBar {
@@ -58,14 +60,34 @@ struct CardsListView: View {
     
     @ViewBuilder
     private var normalHeader: some View {
-        HStack {
-            AppButton(systemImage: "chevron.backward", width: 25, height: 35, style: .clear) {
-                dismiss()
-            }
-            Spacer()
-            AppButton(systemImage: "magnifyingglass", width: 25, height: 35, style: .clear) {
-                showSearchBar = true
-                searchFocused = true
+        ZStack {
+            HStack {
+                AppButton(systemImage: "chevron.backward", width: 25, height: 35, style: .clear) {
+                    dismiss()
+                }
+                Spacer()
+                VStack(alignment: .center, spacing: 5) {
+                    Text(category.title)
+                        .font(.system(size: 18, weight: .semibold))
+                        .multilineTextAlignment(.center)
+                        .lineLimit(1)
+                    
+                    Text("\(category.quantity) карточек")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(category.color.gradient)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 3)
+                        .overlay(
+                            Capsule()
+                                .fill(colorScheme == .dark ? category.color.gradient.opacity(0.1) : category.color.gradient.opacity(0.2))
+                                .stroke(category.color.opacity(0.4), lineWidth: 1)
+                        )
+                }
+                Spacer()
+                AppButton(systemImage: "magnifyingglass", width: 25, height: 35, style: .clear) {
+                    showSearchBar = true
+                    searchFocused = true
+                }
             }
         }
     }
@@ -73,7 +95,7 @@ struct CardsListView: View {
     @ViewBuilder
     private var searchHeader: some View {
         HStack(spacing: 0) {
-            AppSearchBar(title: "Поиск по разделу", height: 45, isFocused: $searchFocused, searchText: $searchText)
+            AppSearchBar(title: "Поиск по карточкам", height: 45, isFocused: $searchFocused, searchText: $searchText)
             Spacer()
             AppButton(systemImage: "xmark", width: 25, height: 35, style: .clear) {
                 showSearchBar = false
@@ -82,8 +104,118 @@ struct CardsListView: View {
             }
         }
     }
+    
+    @ViewBuilder
+    private var cardsListView: some View {
+        NavigationList(items: category.items) { item in
+            CardsView(category: category, item: item)
+        } destination: { item in
+            CardReview(category: category, item: item)
+        } background: { item in
+            LinearGradient(
+                gradient: Gradient(stops: [
+                    .init(color: colorScheme == .dark ? item.rarity.color.opacity(0.20) : item.rarity.color.opacity(0.30), location: 0.0),
+                    .init(color: colorScheme == .dark ? item.rarity.color.opacity(0.10) : item.rarity.color.opacity(0.20), location: 0.45),
+                    .init(color: colorScheme == .dark ? item.rarity.color.opacity(0.05) : item.rarity.color.opacity(0.05), location: 0.75),
+                    .init(color: colorScheme == .dark ? item.rarity.color.opacity(0.00) : item.rarity.color.opacity(0.00), location: 1.0)
+                ]),
+                startPoint: .trailing,
+                endPoint: .leading
+            )
+        }
+    }
+}
+
+private struct CardsView: View {
+    @Environment(\.colorScheme) private var colorScheme
+    
+    let category: CardCategory
+    let item: CardItem
+    
+    var body: some View {
+        HStack(alignment: .center, spacing: 10) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(item.rarity.color.gradient)
+                    .frame(width: 65, height: 65)
+                
+                Image(systemName: category.image)
+                    .font(.system(size: 22))
+                    .foregroundStyle(.white)
+                    .bold()
+            }
+            VStack(alignment: .leading, spacing: 5) {
+                Text(item.title)
+                    .font(.system(size: 16, weight: .semibold))
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(1)
+                
+                Text("Праздники")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(item.rarity.color)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(1)
+                
+                Text(item.description)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(2)
+            }
+            Spacer()
+            
+            Text(item.rarity.name)
+                .font(.system(size: 14, weight: .bold))
+                .foregroundStyle(item.rarity.color.gradient)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .overlay(
+                    Capsule()
+                        .fill(item.rarity.color.opacity(0.2))
+                        .stroke(item.rarity.color.opacity(0.4), lineWidth: 1)
+                )
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.vertical, 10)
+        .padding(.horizontal, 10)
+    }
 }
 
 #Preview {
-    ContentView()
+    CardsListView(
+        category: CardCategory(
+            title: "Праздники",
+            description: "Традиции и обряды солнцестояния с кострами, гаданиями и древними ",
+            quantity: 5,
+            color: .orange,
+            image: "sun.max",
+            items: [
+                CardItem(
+                    title: "Цветок папоротника",
+                    description: "Мифический цветок, который, по легенде, расцветает в ночь на Ивана Купалу и приносит удачу",
+                    rarity: .epic
+                ),
+                CardItem(
+                    title: "Ночь Ивана Купалы",
+                    description: "Праздник летнего солнцестояния с кострами, гаданиями и древними обрядами",
+                    rarity: .rare
+                ),
+                CardItem(
+                    title: "Коляда",
+                    description: "Зимний обрядовый праздник, связанный с рождением нового солнца",
+                    rarity: .common
+                ),
+                CardItem(
+                    title: "Масленица",
+                    description: "Проводы зимы с блинами, гуляниями и сожжением чучела",
+                    rarity: .rare
+                ),
+                CardItem(
+                    title: "Дзяды",
+                    description: "Древний обряд поминовения предков, сохранившийся в белорусской традиции",
+                    rarity: .legendary
+                )
+            ]
+        )
+    )
 }

@@ -14,19 +14,26 @@ struct AuthView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 10) {
+                Spacer()
                 logo
                 description
                 Spacer()
                 buttons
             }
-            .navigationDestination(isPresented: $signInTapped) { SignInView() }
-            .navigationDestination(isPresented: $signUpTapped) { SignUpView() }
+            .navigationDestination(isPresented: $signInTapped) {
+                SignInView()
+            }
+            .navigationDestination(isPresented: $signUpTapped) {
+                SignUpView()
+                    .environmentObject(SignUpViewModel())
+            }
             .background(.sheetBackground)
         }
     }
-    
-    @ViewBuilder
-    private var logo: some View {
+}
+
+private extension AuthView {
+    var logo: some View {
         ZStack {
             Image("logo")
                 .resizable()
@@ -34,8 +41,7 @@ struct AuthView: View {
         }
     }
     
-    @ViewBuilder
-    private var description: some View {
+    var description: some View {
         VStack(spacing: 10) {
             Text("VEDA.cards")
                 .font(.custom("CrimsonText-Regular", size: 48))
@@ -51,9 +57,8 @@ struct AuthView: View {
         }
     }
     
-    @ViewBuilder
-    private var buttons: some View {
-        VStack(spacing: 20) {
+    var buttons: some View {
+        VStack(spacing: 15) {
             AppButton(title: "Войти", height: 40, style: .fill) {
                 signInTapped = true
             }

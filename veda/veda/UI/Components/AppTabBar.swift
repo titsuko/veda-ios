@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AppTabBar: View {
-    @Binding var selectedTab: SelectedTab 
+    @Binding var selectedTab: SelectedTab
     
     var body: some View {
         VStack(spacing: 0) {
@@ -21,8 +21,8 @@ struct AppTabBar: View {
                     .frame(maxWidth: .infinity, maxHeight: 85)
                 
                 HStack {
-                    tabButton(icon: selectedTab == .main ? "house.fill" : "house", title: "Главная", tab: .main)
-                    tabButton(icon: selectedTab == .collection ? "menucard.fill" : "menucard", title: "Коллекции", tab: .collection)
+                    tabButton(icon: selectedTab == .main ? "books.vertical.fill" : "books.vertical", title: "Главная", tab: .main)
+                    tabButton(icon: selectedTab == .collection ? "book.pages.fill" : "book.pages", title: "Коллекции", tab: .collection)
                     tabButton(icon: selectedTab == .settings ? "gearshape.fill" : "gearshape", title: "Настройки", tab: .settings)
                 }
                 .padding(.horizontal, 10)

@@ -26,9 +26,10 @@ struct SignInView: View {
         .onTapGesture { hideKeyboard() }
         .background(.sheetBackground)
     }
-    
-    @ViewBuilder
-    private var description: some View {
+}
+
+private extension SignInView {
+    var description: some View {
         VStack(spacing: 6) {
             Text("Войти в аккаунт")
                 .font(.system(size: 26, weight: .bold))
@@ -41,16 +42,14 @@ struct SignInView: View {
         }
     }
     
-    @ViewBuilder
-    private var textField: some View {
+    var textField: some View {
         VStack(spacing: 20) {
             AppTextField(field: "Email", secure: false, text: $email)
             AppTextField(field: "Пароль", secure: true, text: $password)
         }
     }
     
-    @ViewBuilder
-    private var resetPasswordButton: some View {
+    var resetPasswordButton: some View {
         HStack {
             Spacer()
             Button(action: {}) {
@@ -60,8 +59,7 @@ struct SignInView: View {
         .foregroundStyle(.blue)
     }
     
-    @ViewBuilder
-    private var button: some View {
+    var button: some View {
         AppButton(title: "Войти", height: 40, style: .fill) {
             
         }

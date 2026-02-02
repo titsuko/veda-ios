@@ -18,8 +18,31 @@ extension CardCategory {
             color: .orange,
             image: "sun.min",
             items: [
-                CardItem(title: "Коляда", description: "Зимний праздник"),
-                CardItem(title: "Купала", description: "Летний обряд")
+                CardItem(
+                    title: "Цветок папоротника",
+                    description: "Мифический цветок, который, по легенде, расцветает в ночь на Ивана Купалу и приносит удачу",
+                    rarity: .epic
+                ),
+                CardItem(
+                    title: "Ночь Ивана Купалы",
+                    description: "Праздник летнего солнцестояния с кострами, гаданиями и древними обрядами",
+                    rarity: .rare
+                ),
+                CardItem(
+                    title: "Коляда",
+                    description: "Зимний обрядовый праздник, связанный с рождением нового солнца",
+                    rarity: .common
+                ),
+                CardItem(
+                    title: "Масленица",
+                    description: "Проводы зимы с блинами, гуляниями и сожжением чучела",
+                    rarity: .rare
+                ),
+                CardItem(
+                    title: "Дзяды",
+                    description: "Древний обряд поминовения предков, сохранившийся в белорусской традиции",
+                    rarity: .legendary
+                )
             ]
         ),
 
@@ -30,8 +53,8 @@ extension CardCategory {
             color: .green,
             image: "wand.and.sparkles",
             items: [
-                CardItem(title: "Солнце", description: "Источник жизни"),
-                CardItem(title: "Древо", description: "Связь миров")
+                CardItem(title: "Солнце", description: "Источник жизни", rarity: .legendary),
+                CardItem(title: "Древо", description: "Связь миров", rarity: .rare)
             ]
         ),
 
