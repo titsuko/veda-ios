@@ -58,13 +58,11 @@ fun NavGraphBuilder.authNavGraph(
                 onBackClick = {
                     navController.popBackStack()
                 },
-                onLoginClick = { _, _ ->
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.AuthGraph.route) { inclusive = true }
-                    }
-                },
                 onRedirect = {
                     navController.navigate(Screen.Register.route)
+                },
+                onLoginSuccess = {
+                    navController.navigate(Screen.Home.route)
                 }
             )
         }
@@ -88,13 +86,11 @@ fun NavGraphBuilder.authNavGraph(
                 onBackClick = {
                     navController.popBackStack()
                 },
-                onRegisterClick = { _, _, _ ->
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.AuthGraph.route) { inclusive = true }
-                    }
-                },
                 onRedirect = {
                     navController.navigate(Screen.Login.route)
+                },
+                onRegisterSuccess = {
+                    navController.navigate(Screen.Home.route)
                 }
             )
         }

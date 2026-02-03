@@ -23,28 +23,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.vedaapplication.R
+import com.example.vedaapplication.remote.service.AccountService
 import com.example.vedaapplication.ui.component.AppButton
 import com.example.vedaapplication.ui.component.AppTextField
 import com.example.vedaapplication.ui.screen.auth.component.AuthHeader
+import com.example.vedaapplication.ui.screen.auth.state.RegisterState
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     onBackClick: () -> Unit,
-    onRegisterClick: (String, String, String) -> Unit,
-    onRedirect: () -> Unit
+    onRedirect: () -> Unit,
+    onRegisterSuccess: () -> Unit
 ) {
-    var fullName by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
+    val accountService: AccountService = remember { AccountService() }
+    var state by remember { mutableStateOf(RegisterState()) }
 
     Scaffold(
         topBar = {
@@ -80,22 +85,22 @@ fun RegisterScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 AppTextField(
-                    value = fullName,
-                    onValueChange = { fullName = it },
+                    value = state.fullName,
+                    onValueChange = { state = state.copy(fullName = it) },
                     label = stringResource(R.string.full_name),
                     imeAction = ImeAction.Next
                 )
 
                 AppTextField(
-                    value = email,
-                    onValueChange = { email = it },
+                    value = state.email,
+                    onValueChange = { state = state.copy(email = it) },
                     label = stringResource(R.string.email),
                     imeAction = ImeAction.Next
                 )
 
                 AppTextField(
-                    value = password,
-                    onValueChange = { password = it },
+                    value = state.password,
+                    onValueChange = { state = state.copy(password = it) },
                     label = stringResource(R.string.password),
                     isPassword = true,
                     imeAction = ImeAction.Done
@@ -119,14 +124,41 @@ fun RegisterScreen(
                         }
                     }
                 }
+
+                if (state.errorMessage != null) {
+                    Text(
+                        text = state.errorMessage!!,
+                        color = Color.Red
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
             AppButton(
                 modifier = Modifier.fillMaxWidth(),
-                enabled = email.isNotEmpty() && password.isNotEmpty(),
-                onClick = { onRegisterClick(fullName, email, password) },
+                enabled = state.isButtonEnabled,
+                onClick = {
+                    scope.launch {
+                        state = state.copy(isLoading = true, errorMessage = null)
+
+                        try {
+                            val request = state.toRequest()
+                            val response = accountService.register(request)
+
+                            state = state.copy(isLoading = false)
+
+                            println(response.accessToken)
+                            onRegisterSuccess()
+                        }
+                        catch (e: Exception) {
+                            state = state.copy(
+                                isLoading = false,
+                                errorMessage = e.localizedMessage ?: "Error login"
+                            )
+                        }
+                    }
+                },
                 title = stringResource(R.string.register_button)
             )
         }
@@ -136,5 +168,5 @@ fun RegisterScreen(
 @Preview(showBackground = true)
 @Composable
 private fun RegisterScreenPreview() {
-    RegisterScreen(onRegisterClick = { _, _, _ -> }, onBackClick = {}, onRedirect = {})
+    RegisterScreen(onBackClick = {}, onRedirect = {}, onRegisterSuccess = {})
 }
