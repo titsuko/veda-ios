@@ -13,7 +13,7 @@ struct vedaApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if authViewModel.isRegistered {
+            if !authViewModel.isRegistered {
                 ContentView()
             } else {
                 AuthView()

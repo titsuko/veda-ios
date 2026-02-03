@@ -18,13 +18,31 @@ struct MainView: View {
     var headerHeight: CGFloat = 130
     var tabBarHeight: CGFloat = 85
     
+    var filteredCategories: [CardCategory] {
+        if searchText.isEmpty {
+            return categories
+        } else {
+            return categories.filter {
+                $0.title.localizedCaseInsensitiveContains(searchText) ||
+                $0.description.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
+    
     var body: some View {
         NavigationStack {
-            ScrollView(showsIndicators: false) {
-                sectionsView
-                    .padding(.top, headerHeight)
-                    .padding(.bottom, tabBarHeight)
+            VStack {
+                if filteredCategories.isEmpty {
+                    emptySearchView
+                } else {
+                    ScrollView(showsIndicators: false) {
+                        sectionsView
+                            .padding(.top, headerHeight)
+                            .padding(.bottom, tabBarHeight)
+                    }
+                }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .overlay(alignment: .top) { header }
             .overlay(alignment: .bottom) { AppTabBar(selectedTab: $selectedTab) }
             .ignoresSafeArea()
@@ -96,7 +114,7 @@ struct MainView: View {
     
     @ViewBuilder
     private var sectionsView: some View {
-        NavigationList(items: categories) { category in
+        NavigationList(items: filteredCategories) { category in
             SectionsView(
                 title: category.title,
                 description: category.description,
@@ -105,7 +123,21 @@ struct MainView: View {
                 image: category.image
             )
         } destination: { category in
-            CardsListView(category: category)
+            CardsListView(categories: category)
+        }
+    }
+    
+    @ViewBuilder
+    private var emptySearchView: some View {
+        VStack {
+            Image(systemName: "books.vertical.fill")
+                .resizable()
+                .frame(width: 50, height: 50)
+                .foregroundColor(.secondary)
+            
+            Text("Нет разделов")
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundColor(.secondary)
         }
     }
 }
