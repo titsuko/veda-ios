@@ -14,6 +14,10 @@ enum SelectedTab: Hashable {
 }
 
 struct ContentView: View {
+    @EnvironmentObject var session: SessionManager
+    @EnvironmentObject var signInViewModel: SignInViewModel
+    @EnvironmentObject var signUpViewModel: SignUpViewModel
+    
     @State private var selectedTab: SelectedTab = .main
     @State private var previousTab: SelectedTab = .main
 
@@ -27,6 +31,7 @@ struct ContentView: View {
             }
             if selectedTab == .settings {
                 SettingsView(selectedTab: $selectedTab)
+                    .environmentObject(signInViewModel)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

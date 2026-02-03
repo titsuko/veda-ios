@@ -11,15 +11,13 @@ import Security
 struct KeychainHelper {
     static func save(_ value: String, forKey key: String) -> Bool {
         guard let data = value.data(using: .utf8) else { return false }
-
-        // Удаляем старое значение, если есть
+        
         let queryDelete: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key
         ]
         SecItemDelete(queryDelete as CFDictionary)
 
-        // Добавляем новое
         let queryAdd: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: key,

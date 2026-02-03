@@ -8,12 +8,17 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @EnvironmentObject var signInViewModel: SignInViewModel
     @Binding var selectedTab: SelectedTab
     
     var body: some View {
         NavigationStack {
             VStack {
-                Text("collection")
+                Button(action: {
+                    signInViewModel.logout()
+                }) {
+                    Text("Выйти")
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .safeAreaInset(edge: .bottom) { AppTabBar(selectedTab: $selectedTab) }

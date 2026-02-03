@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct SignInView: View {
-    @State var email: String = ""
-    @State var password: String = ""
-    @State var isAgreed: Bool = false
+    @EnvironmentObject var signInViewModel: SignInViewModel
     
     var body: some View {
         VStack {
@@ -26,10 +24,9 @@ struct SignInView: View {
         .onTapGesture { hideKeyboard() }
         .background(.sheetBackground)
     }
-}
-
-private extension SignInView {
-    var description: some View {
+    
+    @ViewBuilder
+    private var description: some View {
         VStack(spacing: 6) {
             Text("Войти в аккаунт")
                 .font(.system(size: 26, weight: .bold))
@@ -42,14 +39,16 @@ private extension SignInView {
         }
     }
     
-    var textField: some View {
+    @ViewBuilder
+    private var textField: some View {
         VStack(spacing: 20) {
-            AppTextField(field: "Email", secure: false, text: $email)
-            AppTextField(field: "Пароль", secure: true, text: $password)
+            AppTextField(field: "Email", secure: false, text: $signInViewModel.email)
+            AppTextField(field: "Пароль", secure: true, text: $signInViewModel.password)
         }
     }
     
-    var resetPasswordButton: some View {
+    @ViewBuilder
+    private var resetPasswordButton: some View {
         HStack {
             Spacer()
             Button(action: {}) {
@@ -59,14 +58,12 @@ private extension SignInView {
         .foregroundStyle(.blue)
     }
     
-    var button: some View {
+    @ViewBuilder
+    private var button: some View {
         AppButton(title: "Войти", height: 40, style: .fill) {
-            
+            signInViewModel.login()
         }
+        .disabled(signInViewModel.isButtonDisabled)
+        .opacity(signInViewModel.isLoading ? 0.6 : 1)
     }
 }
-
-#Preview {
-    SignInView()
-}
-
