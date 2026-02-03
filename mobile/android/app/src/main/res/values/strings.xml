@@ -1,3 +1,26 @@
 <resources>
-    <string name="app_name">vedaApplication</string>
+    <string name="app_name">VEDA.cards</string>
+
+    <string name="back">Назад</string>
+    <string name="email">Email</string>
+    <string name="password">Пароль</string>
+    <string name="login">Войти</string>
+    <string name="register">Регистрация</string>
+
+    <string name="create_account">Создать аккаунт</string>
+    <string name="login_to_account">Войти в аккаунт</string>
+    <string name="auth_welcome_title">Добро пожаловать в Veda</string>
+    <string name="auth_welcome_subtitle">Войдите или зарегистрируйтесь, чтобы продолжить</string>
+    <string name="already_have_account">Уже есть аккаунт?</string>
+    <string name="no_account">Нет аккаунта?</string>
+
+    <string name="register_subtitle">Пожалуйста, укажите имя, email и пароль для входа</string>
+    <string name="full_name">Ваше имя</string>
+    <string name="register_button">Создать аккаунт</string>
+
+    <string name="login_subtitle">Пожалуйста, укажите email и пароль для входа</string>
+    <string name="login_button">Войти</string>
+
+    <string name="server_error_message">Нет подключения к серверу</string>
+
 </resources>
