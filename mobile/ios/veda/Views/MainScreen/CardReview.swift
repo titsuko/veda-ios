@@ -122,12 +122,15 @@ private struct CardsHeader: View {
                 
                 Text(item.rarity.name)
                     .font(.system(size: 14, weight: .bold))
-                    .foregroundStyle(item.rarity.color.gradient)
+                    .gradientForeground(item.rarity.color)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
-                    .overlay(
+                    .background(
                         Capsule()
                             .fill(item.rarity.color.opacity(0.2))
+                    )
+                    .overlay(
+                        Capsule()
                             .stroke(item.rarity.color.opacity(0.4), lineWidth: 1)
                     )
                     .padding(.top, 10)

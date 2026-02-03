@@ -38,18 +38,32 @@ struct AppButton: View {
 
     var body: some View {
         if style == .fill {
-            Button(action: action) {
-                label
-                    .frame(maxWidth: width, maxHeight: height)
+            if #available(iOS 26.0, *) {
+                Button(action: action) {
+                    label
+                        .frame(maxWidth: width, maxHeight: height)
+                }
+                .buttonStyle(.glassProminent)
+            } else {
+                Button(action: action) {
+                    label
+                        .frame(maxWidth: width, maxHeight: height)
+                }
             }
-            .buttonStyle(.glassProminent)
             
         } else {
-            Button(action: action) {
-                label
-                    .frame(maxWidth: width, maxHeight: height)
+            if #available(iOS 26.0, *) {
+                Button(action: action) {
+                    label
+                        .frame(maxWidth: width, maxHeight: height)
+                }
+                .buttonStyle(.glass)
+            } else {
+                Button(action: action) {
+                    label
+                        .frame(maxWidth: width, maxHeight: height)
+                }
             }
-            .buttonStyle(.glass)
         }
     }
 

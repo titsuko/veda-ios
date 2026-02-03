@@ -76,10 +76,13 @@ struct SignUpView: View {
             HStack {
                 ZStack {
                     RoundedRectangle(cornerRadius: 16)
-                        .fill(signUpViewModel.isAgreed ? .blue : .clear)
-                        .stroke(.gray.opacity(0.4), lineWidth: 1)
+                        .fill(signUpViewModel.isAgreed ? Color.blue : Color.clear)
                         .frame(width: 22, height: 22)
-                    
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color.gray.opacity(0.4), lineWidth: 1)
+                        )
+
                     if signUpViewModel.isAgreed {
                         Image(systemName: "checkmark")
                             .font(.system(size: 12, weight: .bold))

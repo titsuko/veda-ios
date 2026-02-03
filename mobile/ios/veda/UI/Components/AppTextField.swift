@@ -77,25 +77,15 @@ struct AppTextField: View {
                 Button(action: { showPassword.toggle() }) {
                     Image(systemName: showPassword ? "eye" : "eye.slash")
                         .font(.system(size: 18))
-                        .foregroundStyle(.white.secondary)
+                        .foregroundColor(Color.white.opacity(0.7))
                 }
             }
+
             Button(action: { text.removeAll() }) {
                 Image(systemName: "xmark.circle.fill")
                     .font(.system(size: 18))
-                    .foregroundStyle(.white.secondary)
+                    .foregroundColor(Color.white.opacity(0.7))
             }
         }
     }
-}
-
-#Preview {
-    @Previewable @State var email: String = ""
-    @Previewable @State var password: String = ""
-    
-    VStack(spacing: 20) {
-        AppTextField(field: "Email", secure: false, text: $email)
-        AppTextField(field: "Пароль", secure: true, text: $password)
-    }
-    .padding(.horizontal)
 }

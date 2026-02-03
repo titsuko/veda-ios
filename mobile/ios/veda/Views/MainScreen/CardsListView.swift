@@ -91,12 +91,15 @@ struct CardsListView: View {
                     
                     Text("\(categories.quantity) карточек")
                         .font(.system(size: 12, weight: .bold))
-                        .foregroundStyle(categories.color.gradient)
+                        .gradientForeground(categories.color)
                         .padding(.horizontal, 10)
                         .padding(.vertical, 3)
+                        .background(
+                            Capsule()
+                                .fill(categories.color.opacity(colorScheme == .dark ? 0.1 : 0.2))
+                        )
                         .overlay(
                             Capsule()
-                                .fill(colorScheme == .dark ? categories.color.gradient.opacity(0.1) : categories.color.gradient.opacity(0.2))
                                 .stroke(categories.color.opacity(0.4), lineWidth: 1)
                         )
                 }
@@ -197,12 +200,15 @@ private struct CardsView: View {
             
             Text(item.rarity.name)
                 .font(.system(size: 14, weight: .bold))
-                .foregroundStyle(item.rarity.color.gradient)
+                .gradientForeground(item.rarity.color)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
-                .overlay(
+                .background(
                     Capsule()
                         .fill(item.rarity.color.opacity(0.2))
+                )
+                .overlay(
+                    Capsule()
                         .stroke(item.rarity.color.opacity(0.4), lineWidth: 1)
                 )
         }
