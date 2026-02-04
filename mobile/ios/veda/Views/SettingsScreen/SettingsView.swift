@@ -21,7 +21,10 @@ struct SettingsView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .safeAreaInset(edge: .bottom) { AppTabBar(selectedTab: $selectedTab) }
+            .safeAreaInset(edge: .bottom) {
+                AppTabBar(selectedTab: $selectedTab)
+                    .animation(nil, value: selectedTab)
+            }
             .ignoresSafeArea()
             .background(.mainBackground)
         }

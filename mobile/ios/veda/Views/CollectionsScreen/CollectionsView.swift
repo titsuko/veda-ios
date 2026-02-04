@@ -19,7 +19,10 @@ struct CollectionsView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .overlay(alignment: .top) { header }
-            .overlay(alignment: .bottom) { AppTabBar(selectedTab: $selectedTab) }
+            .overlay(alignment: .bottom) { 
+                AppTabBar(selectedTab: $selectedTab)
+                    .animation(nil, value: selectedTab)
+            }
             .ignoresSafeArea()
             .background(.mainBackground)
         }

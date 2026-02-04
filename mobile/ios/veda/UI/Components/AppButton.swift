@@ -44,11 +44,16 @@ struct AppButton: View {
                         .frame(maxWidth: width, maxHeight: height)
                 }
                 .buttonStyle(.glassProminent)
+                .foregroundColor(Color.white)
+                
             } else {
                 Button(action: action) {
                     label
                         .frame(maxWidth: width, maxHeight: height)
+                        .foregroundColor(Color.primary)
                 }
+                .buttonStyle(.borderedProminent)
+                .foregroundColor(Color.white)
             }
             
         } else {
@@ -58,11 +63,14 @@ struct AppButton: View {
                         .frame(maxWidth: width, maxHeight: height)
                 }
                 .buttonStyle(.glass)
+                
             } else {
                 Button(action: action) {
                     label
                         .frame(maxWidth: width, maxHeight: height)
                 }
+                .buttonStyle(.bordered)
+                .foregroundColor(Color.primary)
             }
         }
     }
@@ -91,7 +99,11 @@ struct AppButton: View {
     AppButton(title: "Выйти", style: .clear) {
         
     }
-    AppButton(systemImage: "xmark", width: 30, style: .clear) {
+    
+    HStack(spacing: 10) {
+        AppSearchBar(title: "Search", height: 50, isFocused: .constant(false), searchText: .constant(""))
         
+        AppButton(systemImage: "xmark", width: 30, style: .clear) {}
     }
+    .padding(.horizontal)
 }

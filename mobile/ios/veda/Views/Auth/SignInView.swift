@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SignInView: View {
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var signInViewModel: SignInViewModel
     
     var body: some View {
@@ -18,11 +19,28 @@ struct SignInView: View {
             Spacer()
             button
         }
-        .padding(.horizontal, 20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal)
+        .padding(.top, 60)
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .contentShape(Rectangle())
         .onTapGesture { hideKeyboard() }
         .background(.sheetBackground)
+        .overlay(alignment: .top) { header }
+        .animation(.spring(duration: 0.2), value: signInViewModel.isButtonDisabled)
+        .animation(.spring(duration: 0.2), value: signInViewModel.isLoading)
+    }
+    
+    @ViewBuilder
+    private var header: some View {
+        HStack {
+            AppButton(systemImage: "chevron.left", width: 25, height: 35, style: .clear) {
+                dismiss()
+            }
+            Spacer()
+        }
+        .padding(.horizontal)
+        .padding(.top)
     }
     
     @ViewBuilder

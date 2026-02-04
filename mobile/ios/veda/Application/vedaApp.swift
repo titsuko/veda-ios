@@ -15,17 +15,20 @@ struct vedaApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if session.isLoggedIn {
-                ContentView()
-                    .environmentObject(session)
-                    .environmentObject(signInViewModel)
-                    .environmentObject(signUpViewModel)
-            } else {
-                AuthView()
-                    .environmentObject(session)
-                    .environmentObject(signInViewModel)
-                    .environmentObject(signUpViewModel)
+            Group {
+                if session.isLoggedIn {
+                    ContentView()
+                        .environmentObject(session)
+                        .environmentObject(signInViewModel)
+                        .environmentObject(signUpViewModel)
+                } else {
+                    AuthView()
+                        .environmentObject(session)
+                        .environmentObject(signInViewModel)
+                        .environmentObject(signUpViewModel)
+                }
             }
+            .animation(.bouncy(), value: session.isLoggedIn)
         }
     }
 }

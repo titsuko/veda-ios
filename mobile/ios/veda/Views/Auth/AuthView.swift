@@ -14,25 +14,61 @@ struct AuthView: View {
     @State private var signInTapped: Bool = false
     @State private var signUpTapped: Bool = false
     
+    @State private var showLogo: Bool = false
+    @State private var showDescription: Bool = false
+    @State private var showButtons: Bool = false
+    
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 10) {
-                Spacer()
-                logo
-                description
-                Spacer()
-                buttons
-            }
-            .navigationDestination(isPresented: $signInTapped) {
+        VStack(spacing: 10) {
+            Spacer()
+            
+            logo
+                .opacity(showLogo ? 1 : 0)
+                .offset(y: showLogo ? 0 : 20)
+                .animation(.spring(duration: 1), value: showLogo)
+            
+            description
+                .opacity(showDescription ? 1 : 0)
+                .offset(y: showDescription ? 0 : 40)
+                .animation(.spring(duration: 0.95), value: showDescription)
+            
+            Spacer()
+            
+            buttons
+                .opacity(showButtons ? 1 : 0)
+                .offset(y: showButtons ? 0 : 40)
+                .animation(.spring(duration: 0.95), value: showButtons)
+        }
+        .task {
+            await animateIn()
+        }
+        .sheet(isPresented: $signInTapped) {
+            NavigationStack {
                 SignInView()
                     .environmentObject(signInViewModel)
             }
-            .navigationDestination(isPresented: $signUpTapped) {
+        }
+        .sheet(isPresented: $signUpTapped) {
+            NavigationStack {
                 SignUpView()
                     .environmentObject(signUpViewModel)
             }
-            .background(.sheetBackground)
         }
+        .background(.sheetBackground)
+    }
+    
+    private func animateIn() async {
+        showLogo = false
+        showDescription = false
+        showButtons = false
+        
+        withAnimation { showLogo = true }
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        
+        withAnimation { showDescription = true }
+        try? await Task.sleep(nanoseconds: 400_000_000)
+        
+        withAnimation { showButtons = true }
     }
     
     @ViewBuilder
@@ -73,4 +109,10 @@ struct AuthView: View {
         }
         .padding(.horizontal, 20)
     }
+}
+
+#Preview {
+    AuthView()
+        .environmentObject(SignInViewModel())
+        .environmentObject(SignUpViewModel())
 }

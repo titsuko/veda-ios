@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SignUpView: View {
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var signUpViewModel: SignUpViewModel
     
     var agreementText: AttributedString {
@@ -30,18 +31,32 @@ struct SignUpView: View {
             button
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.horizontal, 20)
+        .padding(.horizontal)
+        .padding(.top, 60)
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .contentShape(Rectangle())
         .onTapGesture { hideKeyboard() }
         .background(.sheetBackground)
-        .animation(.spring(duration: 0.2), value: signUpViewModel.isButtonDisabled)
-        .animation(.spring(duration: 0.2), value: signUpViewModel.isLoading)
         .alert("Ошибка", isPresented: $signUpViewModel.showError) {
             Button("OK", role: .cancel) {}
         } message: {
             Text(signUpViewModel.errorMessage)
         }
+        .overlay(alignment: .top) { header }
+        .animation(.spring(duration: 0.2), value: signUpViewModel.isButtonDisabled)
+        .animation(.spring(duration: 0.2), value: signUpViewModel.isLoading)
+    }
+    
+    @ViewBuilder
+    private var header: some View {
+        HStack {
+            AppButton(systemImage: "chevron.left", width: 25, height: 35, style: .clear) {
+                dismiss()
+            }
+            Spacer()
+        }
+        .padding(.horizontal)
+        .padding(.top)
     }
     
     @ViewBuilder
@@ -108,4 +123,9 @@ struct SignUpView: View {
         .disabled(signUpViewModel.isButtonDisabled)
         .opacity(signUpViewModel.isLoading ? 0.6 : 1)
     }
+}
+
+#Preview {
+    SignUpView()
+        .environmentObject(SignUpViewModel())
 }
