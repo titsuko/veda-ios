@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
 @RequestMapping("/admin")
-class AuthController(
+class AdminAuthController(
     private val sessionService: SessionService
 ) {
 

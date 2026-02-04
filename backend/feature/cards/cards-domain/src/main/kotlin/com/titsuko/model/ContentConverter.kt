@@ -8,23 +8,24 @@ import jakarta.persistence.Converter
 @Converter
 class ContentConverter : AttributeConverter<List<ContentBlock>, String> {
 
-    private val mapper = jacksonObjectMapper()
+    private val objectMapper = jacksonObjectMapper()
 
     override fun convertToDatabaseColumn(attribute: List<ContentBlock>?): String {
         return try {
-            if (attribute.isNullOrEmpty()) "[]"
-            else mapper.writeValueAsString(attribute)
+            objectMapper.writeValueAsString(attribute ?: emptyList<ContentBlock>())
         } catch (e: Exception) {
             "[]"
         }
     }
 
     override fun convertToEntityAttribute(dbData: String?): List<ContentBlock> {
-        if (dbData.isNullOrBlank()) return emptyList()
+        if (dbData.isNullOrBlank()) {
+            return mutableListOf()
+        }
         return try {
-            mapper.readValue(dbData, object : TypeReference<List<ContentBlock>>() {})
+            objectMapper.readValue(dbData, object : TypeReference<List<ContentBlock>>() {})
         } catch (e: Exception) {
-            emptyList()
+            mutableListOf()
         }
     }
 }

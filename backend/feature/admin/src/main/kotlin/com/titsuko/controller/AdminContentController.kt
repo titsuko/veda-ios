@@ -10,7 +10,7 @@ import tools.jackson.databind.ObjectMapper
 
 @Controller
 @RequestMapping("/admin/cards/content")
-class ContentController(
+class AdminContentController(
     private val cardService: CardService,
     private val contentService: ContentService,
     private val objectMapper: ObjectMapper

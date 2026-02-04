@@ -15,7 +15,7 @@ import java.security.Principal
 
 @Controller
 @RequestMapping("/admin/users")
-class UserController(
+class AdminUserController(
     private val userService: UserService
 ) {
 

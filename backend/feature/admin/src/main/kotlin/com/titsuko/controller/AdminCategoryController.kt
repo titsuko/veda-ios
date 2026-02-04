@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 
 @Controller
 @RequestMapping("/admin/category")
-class CategoryController(
+class AdminCategoryController(
     private val categoryService: CategoryService
 ) {
 
