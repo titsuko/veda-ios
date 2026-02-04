@@ -27,3 +27,9 @@ tasks.bootJar {
 tasks.jar {
     enabled = false
 }
+
+subprojects {
+    tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+        enabled = false
+    }
+}

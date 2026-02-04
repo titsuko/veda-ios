@@ -18,9 +18,11 @@ FROM eclipse-temurin:21-jre-jammy AS production
 WORKDIR /app
 
 RUN useradd -m -s /bin/bash appuser
+RUN mkdir -p /app/logs && chown -R appuser:appuser /app
+
 USER appuser
 
-COPY --from=builder /app/app/build/libs/*.jar app.jar
+COPY --from=builder --chown=appuser:appuser /app/app/build/libs/*.jar app.jar
 
 ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom"
 
