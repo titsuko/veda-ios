@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SignInView: View {
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var signInViewModel: SignInViewModel
     
     var body: some View {
@@ -18,11 +19,31 @@ struct SignInView: View {
             Spacer()
             button
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal, 20)
+        .padding(.top, 60)
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        .overlay(alignment: .top) { header }
         .contentShape(Rectangle())
         .onTapGesture { hideKeyboard() }
+        .alert("Ошибка", isPresented: $signInViewModel.showError) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(signInViewModel.errorMessage)
+        }
         .background(.sheetBackground)
+    }
+    
+    @ViewBuilder
+    private var header: some View {
+        HStack {
+            AppButton(systemImage: "chevron.left", width: 25, height: 35, style: .clear) {
+                dismiss()
+            }
+            Spacer()
+        }
+        .padding(.horizontal)
+        .padding(.top)
     }
     
     @ViewBuilder
@@ -66,4 +87,10 @@ struct SignInView: View {
         .disabled(signInViewModel.isButtonDisabled)
         .opacity(signInViewModel.isLoading ? 0.6 : 1)
     }
+}
+
+#Preview {
+    AuthView()
+        .environmentObject(SignInViewModel())
+        .environmentObject(SignUpViewModel())
 }

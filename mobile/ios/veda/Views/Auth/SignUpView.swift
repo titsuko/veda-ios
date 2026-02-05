@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SignUpView: View {
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var signUpViewModel: SignUpViewModel
     
     var agreementText: AttributedString {
@@ -31,7 +32,9 @@ struct SignUpView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal, 20)
+        .padding(.top, 60)
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        .overlay(alignment: .top) { header }
         .contentShape(Rectangle())
         .onTapGesture { hideKeyboard() }
         .background(.sheetBackground)
@@ -42,6 +45,18 @@ struct SignUpView: View {
         } message: {
             Text(signUpViewModel.errorMessage)
         }
+    }
+    
+    @ViewBuilder
+    private var header: some View {
+        HStack {
+            AppButton(systemImage: "chevron.left", width: 25, height: 35, style: .clear) {
+                dismiss()
+            }
+            Spacer()
+        }
+        .padding(.horizontal)
+        .padding(.top)
     }
     
     @ViewBuilder

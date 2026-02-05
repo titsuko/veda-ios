@@ -11,9 +11,8 @@ struct AuthView: View {
     @EnvironmentObject var signUpViewModel: SignUpViewModel
     @EnvironmentObject var signInViewModel: SignInViewModel
     
-    @State private var signInTapped: Bool = false
-    @State private var signUpTapped: Bool = false
-    
+    @State private var appeared = false
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 10) {
@@ -23,15 +22,22 @@ struct AuthView: View {
                 Spacer()
                 buttons
             }
-            .navigationDestination(isPresented: $signInTapped) {
+            .sheet(isPresented: $signInViewModel.signInTapped) {
                 SignInView()
                     .environmentObject(signInViewModel)
             }
-            .navigationDestination(isPresented: $signUpTapped) {
+            .sheet(isPresented: $signUpViewModel.signUpTapped) {
                 SignUpView()
                     .environmentObject(signUpViewModel)
             }
             .background(.sheetBackground)
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                    withAnimation(.spring(response: 0.7, dampingFraction: 0.45, blendDuration: 0.2)) {
+                        appeared = true
+                    }
+                }
+            }
         }
     }
     
@@ -41,6 +47,9 @@ struct AuthView: View {
             Image("logo")
                 .resizable()
                 .frame(width: 230, height: 230)
+                .opacity(appeared ? 1 : 0)
+                .offset(y: appeared ? 0 : 20)
+                .animation(.spring(response: 0.9, dampingFraction: 0.76).delay(0.05), value: appeared)
         }
     }
     
@@ -59,18 +68,30 @@ struct AuthView: View {
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.gray)
         }
+        .opacity(appeared ? 1 : 0)
+        .offset(y: appeared ? 0 : 50)
+        .animation(.spring(response: 0.8, dampingFraction: 0.82).delay(0.18), value: appeared)
     }
     
     @ViewBuilder
     private var buttons: some View {
         VStack(spacing: 15) {
             AppButton(title: "Войти", height: 40, style: .fill) {
-                signInTapped = true
+                signInViewModel.signInTapped = true
             }
             AppButton(title: "Создать аккаунт", height: 40, style: .clear) {
-                signUpTapped = true
+                signUpViewModel.signUpTapped = true
             }
         }
         .padding(.horizontal, 20)
+        .opacity(appeared ? 1 : 0)
+        .offset(y: appeared ? 0 : 30)
+        .animation(.spring(response: 1.2, dampingFraction: 0.88).delay(0.31), value: appeared)
     }
+}
+
+#Preview {
+    AuthView()
+        .environmentObject(SignInViewModel())
+        .environmentObject(SignUpViewModel())
 }

@@ -16,6 +16,7 @@ final class SignUpViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var isAgreed: Bool = false
     
+    @Published var signUpTapped: Bool = false
     @Published var isLoading: Bool = false
     @Published var showError: Bool = false
     @Published var errorMessage: String = ""
@@ -46,6 +47,8 @@ final class SignUpViewModel: ObservableObject {
                     accessToken: auth.accessToken,
                     refreshToken: auth.refreshToken
                 )
+                
+                signUpTapped = false
                 
             } catch {
                 errorMessage = error.localizedDescription

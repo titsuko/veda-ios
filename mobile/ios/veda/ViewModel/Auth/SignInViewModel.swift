@@ -14,6 +14,7 @@ final class SignInViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
     
+    @Published var signInTapped: Bool = false
     @Published var isLoading: Bool = false
     @Published var showError: Bool = false
     @Published var errorMessage: String = ""
@@ -44,6 +45,7 @@ final class SignInViewModel: ObservableObject {
                 )
                 
                 isLoggedIn = true
+                signInTapped = false
                 
             } catch {
                 errorMessage = error.localizedDescription
