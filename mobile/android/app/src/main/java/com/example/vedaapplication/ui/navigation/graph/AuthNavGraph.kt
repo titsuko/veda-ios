@@ -62,7 +62,11 @@ fun NavGraphBuilder.authNavGraph(
                     navController.navigate(Screen.Register.route)
                 },
                 onLoginSuccess = {
-                    navController.navigate(Screen.Home.route)
+                    navController.navigate(Screen.HomeGraph.route) {
+                        popUpTo(Screen.AuthGraph.route) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
@@ -90,7 +94,11 @@ fun NavGraphBuilder.authNavGraph(
                     navController.navigate(Screen.Login.route)
                 },
                 onRegisterSuccess = {
-                    navController.navigate(Screen.Home.route)
+                    navController.navigate(Screen.HomeGraph.route) {
+                        popUpTo(Screen.AuthGraph.route) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }

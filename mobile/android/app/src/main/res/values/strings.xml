@@ -1,26 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">VEDA.cards</string>
+    <string name="app_name">Veda.cards</string>
 
-    <string name="back">Назад</string>
+    <string name="back">Back</string>
+    <string name="error_title">Error</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="loading">Loading...</string>
+    <string name="confirm">Confirm</string>
+
+    <string name="login_to_account">Log in</string>
+    <string name="login_subtitle">Enter your details to log in</string>
     <string name="email">Email</string>
-    <string name="password">Пароль</string>
-    <string name="login">Войти</string>
-    <string name="register">Регистрация</string>
+    <string name="password">Password</string>
+    <string name="no_account">No account? Register</string>
+    <string name="login">Log In</string>
 
-    <string name="create_account">Создать аккаунт</string>
-    <string name="login_to_account">Войти в аккаунт</string>
-    <string name="auth_welcome_title">Добро пожаловать в Veda</string>
-    <string name="auth_welcome_subtitle">Войдите или зарегистрируйтесь, чтобы продолжить</string>
-    <string name="already_have_account">Уже есть аккаунт?</string>
-    <string name="no_account">Нет аккаунта?</string>
+    <string name="create_account">Create Account</string>
+    <string name="register_subtitle">Create an account to get started</string>
+    <string name="full_name">Full Name</string>
+    <string name="already_have_account">Already have an account?</string>
+    <string name="register_button">Sign Up</string>
+    <string name="email_already_registered">A user with this email already exists</string>
 
-    <string name="register_subtitle">Пожалуйста, укажите имя, email и пароль для входа</string>
-    <string name="full_name">Ваше имя</string>
-    <string name="register_button">Создать аккаунт</string>
+    <string name="settings_title">Settings</string>
+    <string name="collections_title">My Collection</string>
+    <string name="app_settings">General Settings</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="language">Language</string>
+    <string name="logout">Log Out</string>
 
-    <string name="login_subtitle">Пожалуйста, укажите email и пароль для входа</string>
-    <string name="login_button">Войти</string>
+    <string name="logout_title">Log Out</string>
+    <string name="logout_confirmation">Are you sure you want to log out?</string>
+    <string name="logout_confirm_button">Log Out</string>
 
-    <string name="server_error_message">Нет подключения к серверу</string>
+    <string name="error_unknown">Unknown error</string>
+    <string name="error_connection">Connection error. Check your internet.</string>
+    <string name="error_timeout">Request timed out</string>
+    <string name="error_server">Server error</string>
+
+    <string name="error_no_internet">No internet connection. Check your network.</string>
+    <string name="error_invalid_input">Invalid request. Check your input.</string>
+    <string name="error_wrong_credentials">Invalid credentials or access denied.</string>
+    <string name="error_conflict">Data conflict. Record might already exist.</string>
+    <string name="error_server_unavailable">Server temporarily unavailable. Try again later.</string>
+
+    <string name="home_title">Sections</string>
+    <string name="search_hint">Search...</string>
+    <string name="empty_cards">No cards yet</string>
 
 </resources>

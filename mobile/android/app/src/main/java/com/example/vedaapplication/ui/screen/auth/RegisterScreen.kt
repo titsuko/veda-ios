@@ -27,17 +27,21 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.vedaapplication.R
+import com.example.vedaapplication.local.TokenManager
+import com.example.vedaapplication.remote.model.request.CheckEmailRequest
 import com.example.vedaapplication.remote.service.AccountService
 import com.example.vedaapplication.ui.component.AppButton
+import com.example.vedaapplication.ui.component.AppDialog
 import com.example.vedaapplication.ui.component.AppTextField
 import com.example.vedaapplication.ui.screen.auth.component.AuthHeader
 import com.example.vedaapplication.ui.screen.auth.state.RegisterState
+import com.example.vedaapplication.util.ErrorHandler
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,9 +51,21 @@ fun RegisterScreen(
     onRedirect: () -> Unit,
     onRegisterSuccess: () -> Unit
 ) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val accountService: AccountService = remember { AccountService() }
+
+    val accountService = remember { AccountService() }
+    val tokenManager = remember { TokenManager(context) }
+
     var state by remember { mutableStateOf(RegisterState()) }
+
+    if (state.errorMessage != null) {
+        AppDialog(
+            onConfirmation = { state = state.copy(errorMessage = null) },
+            dialogTitle = stringResource(id = R.string.error_title),
+            dialogText = state.errorMessage!!
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -124,37 +140,42 @@ fun RegisterScreen(
                         }
                     }
                 }
-
-                if (state.errorMessage != null) {
-                    Text(
-                        text = state.errorMessage!!,
-                        color = Color.Red
-                    )
-                }
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
             AppButton(
                 modifier = Modifier.fillMaxWidth(),
-                enabled = state.isButtonEnabled,
+                enabled = state.isButtonEnabled && !state.isLoading,
                 onClick = {
                     scope.launch {
                         state = state.copy(isLoading = true, errorMessage = null)
-
                         try {
-                            val request = state.toRequest()
-                            val response = accountService.register(request)
+                            val emailCheckResponse = accountService.checkEmail(
+                                CheckEmailRequest(state.email)
+                            )
+
+                            if (!emailCheckResponse.available) {
+                                state = state.copy(
+                                    isLoading = false,
+                                    errorMessage = context.getString(R.string.email_already_registered)
+                                )
+                                return@launch
+                            }
+
+                            val authResponse = accountService.register(state.toRequest())
+
+                            tokenManager.saveTokens(
+                                accessToken = authResponse.accessToken,
+                                refreshToken = authResponse.refreshToken
+                            )
 
                             state = state.copy(isLoading = false)
-
-                            println(response.accessToken)
                             onRegisterSuccess()
-                        }
-                        catch (e: Exception) {
+                        } catch (e: Exception) {
                             state = state.copy(
                                 isLoading = false,
-                                errorMessage = e.localizedMessage ?: "Error login"
+                                errorMessage = ErrorHandler.getUserMessage(context, e)
                             )
                         }
                     }
@@ -168,5 +189,9 @@ fun RegisterScreen(
 @Preview(showBackground = true)
 @Composable
 private fun RegisterScreenPreview() {
-    RegisterScreen(onBackClick = {}, onRedirect = {}, onRegisterSuccess = {})
+    RegisterScreen(
+        onBackClick = {},
+        onRedirect = {},
+        onRegisterSuccess = {}
+    )
 }

@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class AvailabilityResponse(
     // true - email is available, false - email is not available
     val available: Boolean,
-    val message: String
+    val message: String = ""
 )

@@ -4,6 +4,7 @@ import com.example.vedaapplication.di.NetworkClient
 import com.example.vedaapplication.remote.api.AccountApi
 import com.example.vedaapplication.remote.model.request.CheckEmailRequest
 import com.example.vedaapplication.remote.model.request.RegisterRequest
+import com.example.vedaapplication.remote.model.response.AccountResponse
 import com.example.vedaapplication.remote.model.response.AuthResponse
 import com.example.vedaapplication.remote.model.response.AvailabilityResponse
 
@@ -14,6 +15,10 @@ class AccountService {
 
     suspend fun register(request: RegisterRequest): AuthResponse {
         return accountApi.register(request)
+    }
+
+    suspend fun getProfile(): AccountResponse {
+        return accountApi.getProfile()
     }
 
     suspend fun checkEmail(request: CheckEmailRequest): AvailabilityResponse {
