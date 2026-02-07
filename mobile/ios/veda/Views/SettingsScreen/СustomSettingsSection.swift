@@ -8,17 +8,17 @@
 import SwiftUI
 
 private enum SettingsMetrics {
-    static let sectionCornerRadius: CGFloat = 25
+    static let sectionCornerRadius: CGFloat = 20
     static let sectionHorizontalPadding: CGFloat = 10
     static let headerHorizontalPadding: CGFloat = 20
     static let headerBottomSpacing: CGFloat = 6
     
     static let rowHorizontalPadding: CGFloat = 13
-    static let rowVerticalPadding: CGFloat = 10
+    static let rowVerticalPadding: CGFloat = 12
     static let rowInterItemSpacing: CGFloat = 15
     
     static let iconSize: CGFloat = 34
-    static let iconCornerRadius: CGFloat = 20
+    static let iconCornerRadius: CGFloat = 10
     
     static var dividerLeadingInset: CGFloat {
         rowHorizontalPadding + iconSize + rowInterItemSpacing
@@ -54,26 +54,28 @@ struct SettingsRowModel: Identifiable {
 }
 
 struct SettingsRow: View {
-    let iconSystemName: String
-    let iconBackground: Color
+    let iconSystemName: String?
+    let iconBackground: Color?
     let title: String
     let subtitle: String?
     let accessory: SettingsRowAccessory
     
     var body: some View {
         HStack(spacing: SettingsMetrics.rowInterItemSpacing) {
-            ZStack {
-                RoundedRectangle(cornerRadius: SettingsMetrics.iconCornerRadius)
-                    .fill(iconBackground)
-                    .frame(width: SettingsMetrics.iconSize, height: SettingsMetrics.iconSize)
-                Image(systemName: iconSystemName)
-                    .foregroundStyle(.white)
+            if iconBackground != nil || iconSystemName != nil {
+                ZStack {
+                    RoundedRectangle(cornerRadius: SettingsMetrics.iconCornerRadius)
+                        .fill(iconBackground ?? .clear)
+                        .frame(width: SettingsMetrics.iconSize, height: SettingsMetrics.iconSize)
+                    Image(systemName: iconSystemName ?? "")
+                        .foregroundStyle(.white)
+                }
             }
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .foregroundStyle(.primary)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 16))
                     .lineLimit(1)
                 if let subtitle {
                     Text(subtitle)

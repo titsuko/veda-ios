@@ -41,11 +41,6 @@ struct SettingsView: View {
                     .frame(height: 130)
                 
                 HStack {
-                    AppButton(systemImage: "square.and.pencil", width: 25, height: 35, style: .clear) {
-                        
-                    }
-                    Spacer()
-                    
                     HStack(alignment: .center, spacing: 10) {
                         Image(systemName: "gearshape")
                             .font(.system(size: 22))
@@ -84,8 +79,20 @@ struct SettingsView: View {
             SettingsDivider()
             Button(action: { signInViewModel.logout() }) {
                 SettingsRow(
-                    iconSystemName: "rectangle.portrait.and.arrow.right",
-                    iconBackground: .red,
+                    iconSystemName: nil,
+                    iconBackground: nil,
+                    title: "Сменить аккаунта",
+                    subtitle: nil,
+                    accessory: .none
+                )
+                .foregroundStyle(.blue)
+            }
+            
+            SettingsDivider()
+            Button(action: { signInViewModel.logout() }) {
+                SettingsRow(
+                    iconSystemName: nil,
+                    iconBackground: nil,
                     title: "Выйти с аккаунта",
                     subtitle: nil,
                     accessory: .none
@@ -102,7 +109,7 @@ struct SettingsView: View {
                 SettingsRow(
                     iconSystemName: "moon.fill",
                     iconBackground: .mint,
-                    title: "Тёмная тема",
+                    title: "Темы",
                     subtitle: nil,
                     accessory: .chevron
                 )
@@ -126,6 +133,18 @@ struct SettingsView: View {
         CustomSettingsSection(header: "О приложении") {
             NavigationLink(destination: Text("Здесь будет информация о приложении.")) {
                 SettingsRow(
+                    iconSystemName: "questionmark.circle",
+                    iconBackground: .red,
+                    title: "Помощь",
+                    subtitle: nil,
+                    accessory: .chevron
+                )
+            }
+            .foregroundStyle(.primary)
+            
+            SettingsDivider()
+            NavigationLink(destination: Text("Здесь будет информация о приложении.")) {
+                SettingsRow(
                     iconSystemName: "info.circle.fill",
                     iconBackground: .blue,
                     title: "О приложении",
@@ -142,7 +161,7 @@ struct SettingsView: View {
                     iconBackground: .yellow,
                     title: "Оценить приложение",
                     subtitle: nil,
-                    accessory: .none
+                    accessory: .chevron
                 )
             }
             .foregroundStyle(.primary)
