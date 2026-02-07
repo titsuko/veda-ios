@@ -6,5 +6,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     compileOnly("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // common library:
     implementation(project(":common:security"))
+    implementation(project(":common:exception"))
 }

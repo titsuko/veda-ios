@@ -6,6 +6,7 @@ import com.veda.server.dto.request.CheckEmailRequest;
 import com.veda.server.dto.request.RegisterRequest;
 import com.veda.server.dto.response.AuthResponse;
 import com.veda.server.dto.response.AvailabilityResponse;
+import com.veda.server.exception.UserAlreadyExists;
 import com.veda.server.model.User;
 import com.veda.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class AccountService {
     @Transactional
     public AuthResponse createAccount(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new RuntimeException("User with email already exists");
+            throw new UserAlreadyExists("User already exists");
         }
 
         User user = new User();

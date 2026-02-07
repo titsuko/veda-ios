@@ -6,6 +6,8 @@ import com.veda.server.dto.request.LoginRequest;
 import com.veda.server.dto.request.RefreshTokenRequest;
 import com.veda.server.dto.response.AuthResponse;
 import com.veda.server.event.UserAuthorizedEvent;
+import com.veda.server.exception.InvalidCredentialsException;
+import com.veda.server.exception.InvalidTokenException;
 import com.veda.server.model.Token;
 import com.veda.server.model.User;
 import com.veda.server.repository.TokenRepository;
@@ -31,10 +33,10 @@ public class SessionService {
     @Transactional
     public AuthResponse loginUser(LoginRequest request) {
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
+                .orElseThrow(InvalidCredentialsException::new);
 
         if (!encoder.matches(request.password(), user.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+            throw new InvalidCredentialsException();
         }
 
         eventPublisher.publishEvent(new UserAuthorizedEvent(user));
@@ -52,14 +54,14 @@ public class SessionService {
         String incomingRefreshToken = request.token();
 
         if (!jwtService.validateRefreshToken(incomingRefreshToken)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Invalid refresh token");
+            throw new InvalidTokenException("Invalid refresh token");
         }
 
         Token storedToken = tokenRepository.findByToken(incomingRefreshToken)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Token not found"));
+                .orElseThrow(() -> new InvalidTokenException("Token not found"));
 
         if (storedToken.getIsRevoked() == 1) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Token revoked");
+            throw new InvalidTokenException("Token has been revoked");
         }
 
         User user = storedToken.getUser();
